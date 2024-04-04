@@ -1,0 +1,116 @@
+:root {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.container {
+  display: flex; /* Usa flexbox para posicionar os elementos */
+  width: 100%; /* Define a largura total do container */
+  height: 100vh; /* Define a altura total do container */
+}
+
+.menu-lateral {
+  width: 200px; /* Define a largura do menu lateral */
+  padding: 20px; /* Define o espaçamento interno do menu lateral */
+}
+
+.mapa-container {
+  flex-grow: 1; /* Permite que o mapa ocupe todo o espaço restante */
+  padding: 20px; /* Define o espaçamento interno do mapa */
+}
+
+.mapa-hyrule-container {
+  display: grid;
+  grid-template-columns: repeat(42, 15px);
+  grid-template-rows: repeat(42, 15px);
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.mapa-dungeon-container {
+  display: grid;
+  grid-template-columns: repeat(28, 15px);
+  grid-template-rows: repeat(28, 15px);
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.mapa-linha {
+  display: block;
+}
+
+.mapa-celula {
+  width: 15px;
+  height: 15px;
+  border: 1px solid black;
+  text-align: center;
+  line-height: 20px;
+  font-size: 5px;
+}
+
+.mapa-celula:not(:last-child) {
+  border-right: none;
+}
+
+.mapa-linha:not(:last-child) .mapa-celula {
+  border-bottom: none;
+}
+
+.mapa-celula:last-of-type {
+  border-right: none;
+}
+
+.mapa-linha:last-of-type .mapa-celula {
+  border-bottom: none;
+  border-right: 1px solid black;
+}
+
+.btn-iniciar-jogo {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-iniciar-jogo:hover {
+  background-color: #0056b3;
+}
+
+.cell-hyrule-value-1 {
+  background-color: #FFA500;
+}
+
+.cell-hyrule-value-0 {
+  background-color: #FFFFFF;
+}
+
+.cell-hyrule-value-3 {
+  background-color: #FFFF00;
+}
+
+.cell-hyrule-value-10 {
+  background-color: #92D050;
+}
+
+.cell-hyrule-value-20 {
+  background-color: #C4BC96;
+}
+
+.cell-hyrule-value-100 {
+  background-color: #00B050;
+}
+
+.cell-hyrule-value-150 {
+  background-color: #948A54;
+}
+
+.cell-hyrule-value-180 {
+  background-color: #548DD4;
+}
