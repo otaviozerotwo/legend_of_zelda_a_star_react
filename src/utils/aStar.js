@@ -259,24 +259,24 @@ const atribuirClassNameParaCelula = (cell) => {
 //   return path; // Retorna o caminho do nó final até o nó inicial
 // }
 
-function caminhoNoFinalAteInicial(no) {
-  var noAtual = no;
-  var caminho = [];
+function caminhoNoFinalAteInicial(node) {
+  var curr = node;
+  var path = [];
 
-  while (noAtual.paiDoNo) {
-    caminho.unshift(noAtual);
-    noAtual = noAtual.paiDoNo;
+  while (curr.parent) {
+    path.unshift(curr);
+    curr = curr.parent;
   }
 
-  return caminho;
+  return path;
 }
 
 function getHeap() {
   // Retorna uma nova instância de BinaryHeap, com uma função de pontuação definida
   // A função de pontuação é usada para determinar a ordem dos elementos na BinaryHeap
   // Neste caso, a função de pontuação retorna a propriedade 'f' do nó passado como argumento
-  return new BinaryHeap(function(no) {
-    return no.f;
+  return new BinaryHeap(function(node) {
+    return node.f;
   });
 }
 
@@ -312,6 +312,7 @@ const astar = {
   
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
+        console.log('Caminho na linha 319: ', caminhoNoFinalAteInicial(currentNode));
         return caminhoNoFinalAteInicial(currentNode);
       }
   
@@ -344,9 +345,10 @@ const astar = {
           neighbor.f = neighbor.g + neighbor.h;
           // Marca o vizinho como sujo no grafo
           graph.markDirty(neighbor);
-  
+          
           // Se a opção closest estiver ativada, atualiza o nó mais próximo
           if (closest) {
+            console.log('Entrei no if da linha 353');
             if (neighbor.h < closestNode.h || (neighbor.h === closestNode.h && neighbor.g < closestNode.g)) {
               closestNode = neighbor;
             }
@@ -365,6 +367,7 @@ const astar = {
   
     // Se a opção closest estiver ativada, retorna o caminho para o nó mais próximo
     if (closest) {
+      console.log('Caminho para o nó mais próximo: ', caminhoNoFinalAteInicial);
       return caminhoNoFinalAteInicial(closestNode);
     }
   
@@ -665,44 +668,50 @@ GridNode.prototype.toString = function() {
   return "[" + this.x + " " + this.y + "]";
 };
 
+function Mapa({ caminhoEncontrado, grid }) {
+  return (
+    <div className="container">
+      <div className="mapa-container">
+        <div className="mapa-hyrule-container">
+          {grid.map((row, rowIndex) => (
+            <div key={rowIndex} className="mapa-linha">
+              {row.map((cell, cellIndex) => {
+                const className = atribuirClassNameParaCelula(cell);
+                const isCaminho = caminhoEncontrado.some(node => node.x === cellIndex && node.y === rowIndex);
+                return (
+                  <div 
+                    key={cellIndex} 
+                    className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Astar() {
   const [grid, setGrid] = useState(matrizMapa);
   const [startNode, setStartNode] = useState({ x: 24, y: 27 });
   const [endNode, setEndNode] = useState({ x: 6, y: 5 });
-  const [caminho, setCaminho] = useState([]);
   const graph = new Graph(grid);
+  const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
   // Função para executar a busca A* quando o botão for clicado
   const handleSearch = () => {
-    const resultPath = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
-    // setCaminho(resultPath);
+    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
     
-    return resultPath;
+    return setCaminhoEncontrado;
   };
 
   return (
     <>
       <button onClick={handleSearch}>Buscar</button>
-      <div className="container">
-        <div className="mapa-container">
-          <div className="mapa-hyrule-container">
-            {grid.map((row, x) => (
-              <div key={x} className="mapa-linha">
-                {row.map((cell, y) => (
-                  <div
-                    key={y}
-                    cell={cell}
-                    className={`mapa-celula ${atribuirClassNameParaCelula(cell)}`}
-                  >
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>    
+      <Mapa caminhoEncontrado={caminhoEncontrado} grid={grid}/>
     </>
-  );
+  ); 
 };
 
 export default Astar;
