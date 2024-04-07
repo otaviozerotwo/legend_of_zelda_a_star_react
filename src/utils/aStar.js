@@ -1,3 +1,11 @@
+/*
+  f = g + h
+
+  h é o custo do nó atual até o final
+  g é o custo do nó inicial até o atual
+
+*/
+
 import React, { useState } from 'react';
 
 const matrizMapa = [
@@ -214,8 +222,8 @@ const matrizMapa = [
 ];
 
 // Função para mapear os valores da matriz para classes CSS correspondentes
-function getClassForCellValue(value) {
-  switch (value) {
+const atribuirClassNameParaCelula = (cell) => {
+  switch (cell) {
     case 0:
       return "cell-hyrule-value-0";
     case 1:
@@ -237,29 +245,40 @@ function getClassForCellValue(value) {
   }
 };
 
-function pathTo(node) {
-  var curr = node; // Inicializa uma variável 'curr' com o nó fornecido como argumento
-  var path = []; // Cria uma matriz vazia para armazenar o caminho
 
-  // Continua enquanto o nó atual tiver um nó pai
-  while (curr.parent) {
-    path.unshift(curr); // Adiciona o nó atual à frente da matriz para manter a ordem correta
-    curr = curr.parent; // Atualiza o nó atual para ser o nó pai do nó atual
+// function pathTo(node) {
+//   var curr = node; // Inicializa uma variável 'curr' com o nó fornecido como argumento
+//   var path = []; // Cria uma matriz vazia para armazenar o caminho
+
+//   // Continua enquanto o nó atual tiver um nó pai
+//   while (curr.parent) {
+//     path.unshift(curr); // Adiciona o nó atual à frente da matriz para manter a ordem correta
+//     curr = curr.parent; // Atualiza o nó atual para ser o nó pai do nó atual
+//   }
+
+//   return path; // Retorna o caminho do nó final até o nó inicial
+// }
+
+function caminhoNoFinalAteInicial(no) {
+  var noAtual = no;
+  var caminho = [];
+
+  while (noAtual.paiDoNo) {
+    caminho.unshift(noAtual);
+    noAtual = noAtual.paiDoNo;
   }
 
-  return path; // Retorna o caminho do nó final até o nó inicial
+  return caminho;
 }
-
 
 function getHeap() {
   // Retorna uma nova instância de BinaryHeap, com uma função de pontuação definida
   // A função de pontuação é usada para determinar a ordem dos elementos na BinaryHeap
   // Neste caso, a função de pontuação retorna a propriedade 'f' do nó passado como argumento
-  return new BinaryHeap(function(node) {
-    return node.f;
+  return new BinaryHeap(function(no) {
+    return no.f;
   });
 }
-
 
 const astar = {
   // Implementação da função de busca A*
@@ -293,7 +312,7 @@ const astar = {
   
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
-        return pathTo(currentNode);
+        return caminhoNoFinalAteInicial(currentNode);
       }
   
       // Marca o nó atual como fechado
@@ -346,7 +365,7 @@ const astar = {
   
     // Se a opção closest estiver ativada, retorna o caminho para o nó mais próximo
     if (closest) {
-      return pathTo(closestNode);
+      return caminhoNoFinalAteInicial(closestNode);
     }
   
     // Caso contrário, retorna uma lista vazia indicando que o caminho não foi encontrado
@@ -389,16 +408,22 @@ GridNode.prototype.toString = function() {
 };
 
 // Adiciona um método getCost ao protótipo de GridNode
-GridNode.prototype.getCost = function(fromNeighbor) {
+GridNode.prototype.getCost = function() {
   // Retorna o peso do nó para movimentos não diagonais
   return this.weight;
 };
 
 // Adiciona um método isWall ao protótipo de GridNode
 GridNode.prototype.isWall = function() {
+  // Verifica se o peso do nó é igual a 99 (parede da dungeon)
+  return this.weight === 99;
+};
+
+// Adiciona um método entradaDungeon ao protótipo de GridNode
+GridNode.prototype.entradaDungeon = function() {
   // Verifica se o peso do nó é igual a zero
   return this.weight === 0;
-};
+}
 
 // Define uma função construtora chamada BinaryHeap
 function BinaryHeap(scoreFunction) {
@@ -641,20 +666,18 @@ GridNode.prototype.toString = function() {
 };
 
 function Astar() {
-  const gridSize = 42; // Tamanho do grid
-  const defaultWeight = 1; // Peso padrão para as células
-  const cellClass = getClassForCellValue(matrizMapa)
-
   const [grid, setGrid] = useState(matrizMapa);
-  const [startNode, setStartNode] = useState({ x: 0, y: 0 });
-  const [endNode, setEndNode] = useState({ x: gridSize - 1, y: gridSize - 1 });
-  const [path, setPath] = useState([]);
+  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
+  const [endNode, setEndNode] = useState({ x: 6, y: 5 });
+  const [caminho, setCaminho] = useState([]);
+  const graph = new Graph(grid);
 
   // Função para executar a busca A* quando o botão for clicado
   const handleSearch = () => {
-    const graph = new Graph(grid);
     const resultPath = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
-    setPath(resultPath);
+    // setCaminho(resultPath);
+    
+    return resultPath;
   };
 
   return (
@@ -663,13 +686,13 @@ function Astar() {
       <div className="container">
         <div className="mapa-container">
           <div className="mapa-hyrule-container">
-            {matrizMapa.map((row, x) => (
+            {grid.map((row, x) => (
               <div key={x} className="mapa-linha">
                 {row.map((cell, y) => (
                   <div
                     key={y}
                     cell={cell}
-                    className={`mapa-celula ${cellClass}`}
+                    className={`mapa-celula ${atribuirClassNameParaCelula(cell)}`}
                   >
                   </div>
                 ))}
