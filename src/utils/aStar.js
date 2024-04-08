@@ -695,7 +695,7 @@ function Mapa({ caminhoEncontrado, grid }) {
 function Astar() {
   const [grid, setGrid] = useState(matrizMapa);
   const [startNode, setStartNode] = useState({ x: 24, y: 27 });
-  const [endNode, setEndNode] = useState({ x: 6, y: 5 });
+  const [endNode, setEndNode] = useState({ x: 17, y: 39 });
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
