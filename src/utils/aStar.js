@@ -259,7 +259,7 @@ const atribuirClassNameParaCelula = (cell) => {
 //   return path; // Retorna o caminho do nó final até o nó inicial
 // }
 
-function caminhoNoFinalAteInicial(node) {
+function pathTo(node) {
   var curr = node;
   var path = [];
 
@@ -312,8 +312,8 @@ const astar = {
   
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
-        console.log('Caminho na linha 319: ', caminhoNoFinalAteInicial(currentNode));
-        return caminhoNoFinalAteInicial(currentNode);
+        console.log('Caminho na linha 319: ', pathTo(currentNode));
+        return pathTo(currentNode);
       }
   
       // Marca o nó atual como fechado
@@ -367,8 +367,8 @@ const astar = {
   
     // Se a opção closest estiver ativada, retorna o caminho para o nó mais próximo
     if (closest) {
-      console.log('Caminho para o nó mais próximo: ', caminhoNoFinalAteInicial);
-      return caminhoNoFinalAteInicial(closestNode);
+      console.log('Caminho para o nó mais próximo: ', pathTo);
+      return pathTo(closestNode);
     }
   
     // Caso contrário, retorna uma lista vazia indicando que o caminho não foi encontrado
@@ -681,7 +681,9 @@ function Mapa({ caminhoEncontrado, grid }) {
                 return (
                   <div 
                     key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} />
+                    className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
+                    <span className="mapa-coordenada">{`x: ${cellIndex}, y: ${rowIndex}`}</span>  
+                  </div>
                 );
               })}
             </div>

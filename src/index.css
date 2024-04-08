@@ -43,7 +43,7 @@
   width: 15px;
   height: 15px;
   border: 1px solid black;
-  text-align: center;
+  text-align: start;
   line-height: 20px;
   font-size: 5px;
 }
@@ -63,6 +63,10 @@
 .mapa-linha:last-of-type .mapa-celula {
   border-bottom: none;
   border-right: 1px solid black;
+}
+
+.mapa-coordenada {
+  font-size: 3px;
 }
 
 .btn-iniciar-jogo {
@@ -118,3 +122,4 @@
 .caminho {
   background-color: purple;
 }
+
