@@ -289,7 +289,8 @@ const astar = {
     // Configurações opcionais para a busca A*
     options = options || {};
     // Heurística a ser usada, padrão é a distância de euclidean
-    var heuristic = options.heuristic || astar.heuristics.euclidean;
+    // var heuristic = options.heuristic || astar.heuristics.euclidean;
+    var heuristic = options.heuristic || astar.heuristics.manhattan;
     // Indica se deve retornar o caminho para o nó mais próximo se o destino for inalcançável
     var closest = options.closest || false;
   
@@ -376,13 +377,25 @@ const astar = {
   },  
   heuristics: {
     // Heurística de distância euclidiana: calcula a distância euclidiana entre duas posições no grid
-    euclidean: function(pos0, pos1) {
+    // euclidean: function(pos0, pos1) {
       // Calcula a diferença nas coordenadas x e y
-      var dx = pos1.x - pos0.x;
-      var dy = pos1.y - pos0.y;
+      // var dx = pos1.x - pos0.x;
+      // var dy = pos1.y - pos0.y;
       // Calcula a distância euclidiana usando o teorema de Pitágoras
-      return Math.sqrt(dx * dx + dy * dy);
+      // return Math.sqrt(dx * dx + dy * dy);
+    // },
+    manhattan: function(pos0, pos1) {
+      var d1 = Math.abs(pos1.x - pos0.x);
+      var d2 = Math.abs(pos1.y - pos0.y);
+      return d1 + d2;
     },
+    diagonal: function(pos0, pos1) {
+      var D = 1;
+      var D2 = Math.sqrt(2);
+      var d1 = Math.abs(pos1.x - pos0.x);
+      var d2 = Math.abs(pos1.y - pos0.y);
+      return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
+    }
   },
   
   // Função para limpar os atributos de um nó
@@ -410,9 +423,10 @@ GridNode.prototype.toString = function() {
   return "[" + this.x + " " + this.y + "]";
 };
 
-// Adiciona um método getCost ao protótipo de GridNode
-GridNode.prototype.getCost = function() {
-  // Retorna o peso do nó para movimentos não diagonais
+GridNode.prototype.getCost = function(fromNeighbor) {
+  if (fromNeighbor && fromNeighbor.x !== this.x && fromNeighbor.y !== this.y) {
+    return this.weight * 1.41421;
+  }
   return this.weight;
 };
 
@@ -421,12 +435,6 @@ GridNode.prototype.isWall = function() {
   // Verifica se o peso do nó é igual a 99 (parede da dungeon)
   return this.weight === 99;
 };
-
-// Adiciona um método entradaDungeon ao protótipo de GridNode
-GridNode.prototype.entradaDungeon = function() {
-  // Verifica se o peso do nó é igual a zero
-  return this.weight === 0;
-}
 
 // Define uma função construtora chamada BinaryHeap
 function BinaryHeap(scoreFunction) {
@@ -577,6 +585,7 @@ function Graph(gridIn, options) {
   options = options || {};
   // Inicializa um array vazio para armazenar os nós do grafo
   this.nodes = [];
+  this.diagonal = !!options.diagonal;
   // Inicializa um array bidimensional vazio para representar a grade do grafo
   this.grid = [];
   // Percorre as linhas da grade fornecida
@@ -658,6 +667,24 @@ Graph.prototype.neighbors = function(node) {
     // Adiciona o nó abaixo ao array de vizinhos
     ret.push(grid[x][y + 1]);
   }
+
+  if (this.diagonal) {
+    if (grid[x - 1] && grid[x - 1][y - 1]) {
+      ret.push(grid[x - 1][y - 1]);
+    }
+
+    if (grid[x + 1] && grid[x + 1][y - 1]) {
+      ret.push(grid[x + 1][y - 1]);
+    }
+
+    if (grid[x - 1] && grid[x - 1][y + 1]) {
+      ret.push(grid[x - 1][y + 1]);
+    }
+
+    if (grid[x + 1] && grid[x + 1][y + 1]) {
+      ret.push(grid[x + 1][y + 1]);
+    }
+  }
   // Retorna o array de vizinhos
   return ret;
 };
@@ -682,9 +709,9 @@ function Mapa({ caminhoEncontrado, grid }) {
                   <div 
                     key={cellIndex} 
                     className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
-                    {/* <span className="mapa-coordenada-x">{`x: ${cellIndex}`}</span>  
-                    <span className="mapa-coordenada-y">{`y: ${rowIndex}`}</span>   */}
-                    <span className="mapa-celula-custo-fixo">{cell}</span>
+                    <span className="mapa-coordenada-x">{`x: ${cellIndex}`}</span>  
+                    <span className="mapa-coordenada-y">{`y: ${rowIndex}`}</span>  
+                    {/* <span className="mapa-celula-custo-fixo">{cell}</span> */}
                   </div>
                 );
               })}
@@ -698,8 +725,10 @@ function Mapa({ caminhoEncontrado, grid }) {
 
 function Astar() {
   const [grid, setGrid] = useState(matrizMapa);
-  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
+  const [startNode, setStartNode] = useState({ x: 27, y: 24 });
   const [endNode, setEndNode] = useState({ x: 17, y: 39 });
+  // const [endNode, setEndNode] = useState({ x: 1, y: 24 });
+  // const [endNode, setEndNode] = useState({ x: 32, y: 5 });
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
