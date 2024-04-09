@@ -43,9 +43,7 @@
   width: 15px;
   height: 15px;
   border: 1px solid black;
-  text-align: start;
-  line-height: 20px;
-  font-size: 5px;
+  line-height: 7px;
 }
 
 .mapa-celula:not(:last-child) {
@@ -65,8 +63,18 @@
   border-right: 1px solid black;
 }
 
-.mapa-coordenada {
-  font-size: 3px;
+.mapa-celula-custo-fixo {
+  display: flex;
+  font-size: 4px;
+  justify-content: center;
+  margin-top: 3.5px;
+}
+
+.mapa-coordenada-x,
+.mapa-coordenada-y {
+  display: block;
+  font-size: 3.5px;
+  margin-left: 4px;
 }
 
 .btn-iniciar-jogo {

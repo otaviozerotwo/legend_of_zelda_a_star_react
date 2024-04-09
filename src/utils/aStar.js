@@ -682,7 +682,9 @@ function Mapa({ caminhoEncontrado, grid }) {
                   <div 
                     key={cellIndex} 
                     className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
-                    <span className="mapa-coordenada">{`x: ${cellIndex}, y: ${rowIndex}`}</span>  
+                    {/* <span className="mapa-coordenada-x">{`x: ${cellIndex}`}</span>  
+                    <span className="mapa-coordenada-y">{`y: ${rowIndex}`}</span>   */}
+                    <span className="mapa-celula-custo-fixo">{cell}</span>
                   </div>
                 );
               })}
