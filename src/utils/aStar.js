@@ -7,9 +7,9 @@
 */
 
 import React, { useState } from 'react';
-import gridHyrule from '../screens/GridMapaPrincipal';
-import atribuirClassNameParaCelula from './AtribuirClassName';
-
+import gridHyrule from '../data/GridMapaPrincipal';
+import Mapa from '../screens/MapaPrincipal';
+import encontrarEntradaDungeon from './EncontrarEntradaDungeon';
 
 // function pathTo(node) {
 //   var curr = node; // Inicializa uma variável 'curr' com o nó fornecido como argumento
@@ -494,54 +494,6 @@ Graph.prototype.neighbors = function(node) {
 GridNode.prototype.toString = function() {
   // Retorna uma string representando as coordenadas x e y do nó
   return "[" + this.x + " " + this.y + "]";
-};
-
-function Mapa({ caminhoEncontrado, grid }) {
-  return (
-    <div className="container">
-      <div className="mapa-container">
-        <div className="mapa-hyrule-container">
-          {grid.map((row, rowIndex) => (
-            <div key={rowIndex} className="mapa-linha">
-              {row.map((cell, cellIndex) => {
-                const className = atribuirClassNameParaCelula(cell);
-                const isCaminho = caminhoEncontrado.some(node => node.x === rowIndex && node.y === cellIndex);
-                return (
-                  <div 
-                    key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
-                    {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
-                    <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>   */}
-                    {/* <span className="mapa-celula-custo-fixo">{cell}</span> */}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-function calcularDistancia(x1, y1, x2, y2) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-}
-
-function encontrarEntradaDungeon(startNode, entradasDungeons) {
-  let distanciaMinima = Infinity;
-  let entradaMaisProxima = null;
-
-  entradasDungeons.forEach(entrada => {
-    const distancia = calcularDistancia(startNode.x, startNode.y, entrada.x, entrada.y);
-
-    if (distancia < distanciaMinima) {
-      distanciaMinima = distancia;
-      entradaMaisProxima = entrada;
-    }
-  });
-
-  return entradaMaisProxima;
 };
 
 function Astar() {
