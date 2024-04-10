@@ -1,4 +1,4 @@
-import calcularDistancia from '../utils/calcularDistancia';
+import calcularDistancia from './CalcularDistancia';
 
 function encontrarEntradaDungeon(startNode, entradasDungeons) {
   let distanciaMinima = Infinity;
