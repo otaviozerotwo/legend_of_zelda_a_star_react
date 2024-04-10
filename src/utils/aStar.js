@@ -745,8 +745,8 @@ function Mapa({ caminhoEncontrado, grid }) {
                   <div 
                     key={cellIndex} 
                     className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
-                    <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
-                    <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>  
+                    {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
+                    <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>   */}
                     {/* <span className="mapa-celula-custo-fixo">{cell}</span> */}
                   </div>
                 );
@@ -757,20 +757,48 @@ function Mapa({ caminhoEncontrado, grid }) {
       </div>
     </div>
   );
+};
+
+function calcularDistancia(x1, y1, x2, y2) {
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 }
+
+function encontrarEntradaDungeon(startNode, entradasDungeons) {
+  let distanciaMinima = Infinity;
+  let entradaMaisProxima = null;
+
+  entradasDungeons.forEach(entrada => {
+    const distancia = calcularDistancia(startNode.x, startNode.y, entrada.x, entrada.y);
+
+    if (distancia < distanciaMinima) {
+      distanciaMinima = distancia;
+      entradaMaisProxima = entrada;
+    }
+  });
+
+  return entradaMaisProxima;
+};
 
 function Astar() {
   const [grid, setGrid] = useState(matrizMapa);
   const [startNode, setStartNode] = useState({ x: 24, y: 27 });
-  const [endNode, setEndNode] = useState({ x: 39, y: 17 });
-  // const [endNode, setEndNode] = useState({ x: 1, y: 24 });
-  // const [endNode, setEndNode] = useState({ x: 32, y: 5 });
+  // const [endNode, setEndNode] = useState({ x: 39, y: 17 }); // entrada Dungeon 1
+  // const [endNode, setEndNode] = useState({ x: 24, y: 1 }); // entrada Dungeon 2
+  // const [endNode, setEndNode] = useState({ x: 5, y: 32 }); // entrada Dungeon 3
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
   // Função para executar a busca A* quando o botão for clicado
   const handleSearch = () => {
-    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
+    const entradasDungeons = [
+      { x: 39, y: 17 }, // entrada Dungeon 1
+      { x: 24, y: 1 }, // entrada Dungeon 2
+      { x: 5, y: 32 } // entrada Dungeon 3
+    ];
+
+    const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
+    // setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
+    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
     
     return setCaminhoEncontrado;
   };
