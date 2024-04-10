@@ -1,6 +1,6 @@
 import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
 
-const Mapa = ({ caminhoEncontrado, grid }) => {
+const TelaMapaPrincipal = ({ caminhoEncontrado, grid }) => {
   return (
     <div className="container">
       <div className="mapa-container">
@@ -28,4 +28,4 @@ const Mapa = ({ caminhoEncontrado, grid }) => {
   );
 };
 
-export default Mapa;
+export default TelaMapaPrincipal;

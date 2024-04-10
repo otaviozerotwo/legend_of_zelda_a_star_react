@@ -6,11 +6,6 @@
 
 */
 
-import React, { useState } from 'react';
-import gridHyrule from '../data/GridMapaPrincipal';
-import Mapa from '../screens/MapaPrincipal';
-import encontrarEntradaDungeon from './EncontrarEntradaDungeon';
-
 // function pathTo(node) {
 //   var curr = node; // Inicializa uma variável 'curr' com o nó fornecido como argumento
 //   var path = []; // Cria uma matriz vazia para armazenar o caminho
@@ -207,29 +202,6 @@ const astar = {
   }  
 };
 
-// Define uma função construtora chamada GridNode
-function GridNode(x, y, weight) {
-  this.x = x; // Atribui a coordenada x fornecida como parâmetro à propriedade x do objeto criado
-  this.y = y; // Atribui a coordenada y fornecida como parâmetro à propriedade y do objeto criado
-  this.weight = weight; // Atribui o peso fornecido como parâmetro à propriedade weight do objeto criado
-}
-
-// Adiciona um método toString ao protótipo de GridNode
-GridNode.prototype.toString = function() {
-  // Retorna uma string representando as coordenadas x e y do nó
-  return "[" + this.x + " " + this.y + "]";
-};
-
-GridNode.prototype.getCost = function() {
-  return this.weight;
-};
-
-// Adiciona um método isWall ao protótipo de GridNode
-GridNode.prototype.isWall = function() {
-  // Verifica se o peso do nó é igual a 99 (parede da dungeon)
-  return this.weight === 99;
-};
-
 // Define uma função construtora chamada BinaryHeap
 function BinaryHeap(scoreFunction) {
   // Inicializa um array vazio para armazenar os elementos do heap
@@ -373,159 +345,7 @@ BinaryHeap.prototype = {
   }
 };
 
-// Define uma função construtora chamada Graph
-function Graph(gridIn, options) {
-  // Se options for indefinido, define-o como um objeto vazio
-  options = options || {};
-  // Inicializa um array vazio para armazenar os nós do grafo
-  this.nodes = [];
-  // this.diagonal = !!options.diagonal;
-  // Inicializa um array bidimensional vazio para representar a grade do grafo
-  this.grid = [];
-  // Percorre as linhas da grade fornecida
-  for (var x = 0; x < gridIn.length; x++) {
-    // Inicializa uma nova linha na grade do grafo
-    this.grid[x] = [];
-    // Percorre as colunas da linha atual
-    for (var y = 0, row = gridIn[x]; y < row.length; y++) {
-      // Cria um novo nó da grade com as coordenadas (x, y) e o peso da célula atual
-      // var node = new GridNode(x, y, row[y]);
-      var node = new GridNode(x, y, gridIn[x][y]);
+export default astar;
 
-      // console.log('node: ', node);
 
-      // Adiciona o nó recém-criado à grade do grafo
-      this.grid[x][y] = node;
 
-      // console.log(node);
-
-      // Adiciona o nó recém-criado à lista de nós do grafo
-      this.nodes.push(node);
-    }
-  }
-  // Inicializa o grafo
-  this.init();
-}
-
-// Adiciona um método init ao protótipo de Graph
-Graph.prototype.init = function() {
-  // Inicializa um array vazio para armazenar os nós sujos (dirty)
-  this.dirtyNodes = [];
-  // Percorre todos os nós do grafo
-  for (var i = 0; i < this.nodes.length; i++) {
-    // Limpa o nó atual
-    astar.cleanNode(this.nodes[i]);
-  }
-};
-
-// Adiciona um método cleanDirty ao protótipo de Graph
-Graph.prototype.cleanDirty = function() {
-  // Percorre todos os nós sujos
-  for (var i = 0; i < this.dirtyNodes.length; i++) {
-    // Limpa o nó sujo atual
-    astar.cleanNode(this.dirtyNodes[i]);
-  }
-  // Limpa o array de nós sujos
-  this.dirtyNodes = [];
-};
-
-// Adiciona um método markDirty ao protótipo de Graph
-Graph.prototype.markDirty = function(node) {
-  // Adiciona o nó fornecido ao array de nós sujos
-  this.dirtyNodes.push(node);
-};
-
-// Adiciona um método neighbors ao protótipo de Graph
-Graph.prototype.neighbors = function(node) {
-  // Inicializa um array vazio para armazenar os vizinhos do nó
-  var ret = [];
-  // Obtém as coordenadas x e y do nó
-  var x = node.x;
-  var y = node.y;
-  // Obtém a grade do grafo
-  var grid = this.grid;
-
-  // Verifica se existe um nó à esquerda do nó atual
-  if (grid[x - 1] && grid[x - 1][y]) {
-    // Adiciona o nó à esquerda ao array de vizinhos
-    ret.push(grid[x - 1][y]);
-  }
-
-  // Verifica se existe um nó à direita do nó atual
-  if (grid[x + 1] && grid[x + 1][y]) {
-    // Adiciona o nó à direita ao array de vizinhos
-    ret.push(grid[x + 1][y]);
-  }
-
-  // Verifica se existe um nó acima do nó atual
-  if (grid[x] && grid[x][y - 1]) {
-    // Adiciona o nó acima ao array de vizinhos
-    ret.push(grid[x][y - 1]);
-  }
-
-  // Verifica se existe um nó abaixo do nó atual
-  if (grid[x] && grid[x][y + 1]) {
-    // Adiciona o nó abaixo ao array de vizinhos
-    ret.push(grid[x][y + 1]);
-  }
-
-  // if (this.diagonal) {
-  //   if (grid[x - 1] && grid[x - 1][y - 1]) {
-  //     ret.push(grid[x - 1][y - 1]);
-  //   }
-
-  //   if (grid[x + 1] && grid[x + 1][y - 1]) {
-  //     ret.push(grid[x + 1][y - 1]);
-  //   }
-
-  //   if (grid[x - 1] && grid[x - 1][y + 1]) {
-  //     ret.push(grid[x - 1][y + 1]);
-  //   }
-
-  //   if (grid[x + 1] && grid[x + 1][y + 1]) {
-  //     ret.push(grid[x + 1][y + 1]);
-  //   }
-  // }
-  // Retorna o array de vizinhos
-  return ret;
-};
-
-// Adiciona um método toString ao protótipo de GridNode
-GridNode.prototype.toString = function() {
-  // Retorna uma string representando as coordenadas x e y do nó
-  return "[" + this.x + " " + this.y + "]";
-};
-
-function Astar() {
-  const [grid, setGrid] = useState(gridHyrule);
-  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
-  // const [endNode, setEndNode] = useState({ x: 39, y: 17 }); // entrada Dungeon 1
-  // const [endNode, setEndNode] = useState({ x: 24, y: 1 }); // entrada Dungeon 2
-  // const [endNode, setEndNode] = useState({ x: 5, y: 32 }); // entrada Dungeon 3
-  const graph = new Graph(grid);
-  const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
-
-  // Função para executar a busca A* quando o botão for clicado
-  const handleSearch = () => {
-    const entradasDungeons = [
-      { x: 39, y: 17 }, // entrada Dungeon 1
-      { x: 24, y: 1 }, // entrada Dungeon 2
-      { x: 5, y: 32 } // entrada Dungeon 3
-    ];
-
-    const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
-    // setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
-    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
-    
-    return setCaminhoEncontrado;
-  };
-
-  return (
-    <>
-      <button onClick={handleSearch}>Buscar</button>
-      <Mapa caminhoEncontrado={caminhoEncontrado} grid={grid}/>
-    </>
-  ); 
-};
-
-export default Astar;

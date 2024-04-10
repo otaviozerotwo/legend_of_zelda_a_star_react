@@ -1,9 +1,9 @@
-import Astar from './utils/aStar'
+import RenderizarMapaPrincipal from './screens/RenderizarMapaPrincipal'
 
 function App() {
   return (
     <div>
-      <Astar />
+      <RenderizarMapaPrincipal />
     </div>
   );
 }
