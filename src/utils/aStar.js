@@ -283,37 +283,65 @@ function getHeap() {
 const astar = {
   // Implementação da função de busca A*
   search: function(graph, start, end, options) {
+    
+    console.log('1. Entrei na função search');
+    console.log('2. grafo antes de chamar cleanDirty: ', graph);
+
     // Limpa os nós marcados como sujos no grafo
     graph.cleanDirty();
-  
+    
+    console.log('3. grafo após chamar cleanDirty: ', graph);
+
     // Configurações opcionais para a busca A*
     options = options || {};
+
+    console.log('4. Valor de options: ', options);
+
     // Heurística a ser usada, padrão é a distância de euclidean
     // var heuristic = options.heuristic || astar.heuristics.euclidean;
     var heuristic = options.heuristic || astar.heuristics.manhattan;
+
+    console.log('5. Valor heuristica: ', heuristic);
+
     // Indica se deve retornar o caminho para o nó mais próximo se o destino for inalcançável
     var closest = options.closest || false;
+
+    console.log('6. Valor closest: ', closest);
   
     // Cria uma BinaryHeap para manter os nós abertos
     var openHeap = getHeap();
+
+    console.log('7. Valor openHeap: ', openHeap);
+
     // Define o nó inicial como o mais próximo, se necessário
     var closestNode = start;
+
+    console.log('8. Valor closestNode: ', closestNode);
   
     // Calcula a heurística para o nó inicial e marca-o como sujo
     start.h = heuristic(start, end);
     graph.markDirty(start);
+
+    console.log('9. Valor start.h: ', start.h);
+    console.log('10. Valor grafo após executar markDirty: ', graph);
   
     // Adiciona o nó inicial à heap aberta
     openHeap.push(start);
+
+    console.log('11. Valor openHeap linha 331: ', openHeap);
   
     // Loop principal da busca A*
     while (openHeap.size() > 0) {
       // Remove o nó com a menor pontuação da heap aberta
       var currentNode = openHeap.pop();
+
+      console.log('12. Valor currentNode dentro do loop: ', currentNode);
   
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
-        console.log('Caminho na linha 319: ', pathTo(currentNode));
+        
+        console.log('13. Caminho pathTo: ', pathTo(currentNode));
+        
         return pathTo(currentNode);
       }
   
@@ -322,6 +350,8 @@ const astar = {
   
       // Encontra todos os vizinhos do nó atual
       var neighbors = graph.neighbors(currentNode);
+
+      console.log('14. Valor neighbors: ', neighbors);
   
       // Itera sobre os vizinhos
       for (var i = 0, il = neighbors.length; i < il; ++i) {
@@ -371,6 +401,8 @@ const astar = {
       console.log('Caminho para o nó mais próximo: ', pathTo);
       return pathTo(closestNode);
     }
+
+    console.log(pathTo(currentNode));
   
     // Caso contrário, retorna uma lista vazia indicando que o caminho não foi encontrado
     return [];
@@ -389,13 +421,13 @@ const astar = {
       var d2 = Math.abs(pos1.y - pos0.y);
       return d1 + d2;
     },
-    diagonal: function(pos0, pos1) {
-      var D = 1;
-      var D2 = Math.sqrt(2);
-      var d1 = Math.abs(pos1.x - pos0.x);
-      var d2 = Math.abs(pos1.y - pos0.y);
-      return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
-    }
+    // diagonal: function(pos0, pos1) {
+    //   var D = 1;
+    //   var D2 = Math.sqrt(2);
+    //   var d1 = Math.abs(pos1.x - pos0.x);
+    //   var d2 = Math.abs(pos1.y - pos0.y);
+    //   return (D * (d1 + d2)) + ((D2 - (2 * D)) * Math.min(d1, d2));
+    // }
   },
   
   // Função para limpar os atributos de um nó
@@ -423,10 +455,7 @@ GridNode.prototype.toString = function() {
   return "[" + this.x + " " + this.y + "]";
 };
 
-GridNode.prototype.getCost = function(fromNeighbor) {
-  if (fromNeighbor && fromNeighbor.x !== this.x && fromNeighbor.y !== this.y) {
-    return this.weight * 1.41421;
-  }
+GridNode.prototype.getCost = function() {
   return this.weight;
 };
 
@@ -585,7 +614,7 @@ function Graph(gridIn, options) {
   options = options || {};
   // Inicializa um array vazio para armazenar os nós do grafo
   this.nodes = [];
-  this.diagonal = !!options.diagonal;
+  // this.diagonal = !!options.diagonal;
   // Inicializa um array bidimensional vazio para representar a grade do grafo
   this.grid = [];
   // Percorre as linhas da grade fornecida
@@ -595,9 +624,16 @@ function Graph(gridIn, options) {
     // Percorre as colunas da linha atual
     for (var y = 0, row = gridIn[x]; y < row.length; y++) {
       // Cria um novo nó da grade com as coordenadas (x, y) e o peso da célula atual
-      var node = new GridNode(x, y, row[y]);
+      // var node = new GridNode(x, y, row[y]);
+      var node = new GridNode(x, y, gridIn[x][y]);
+
+      // console.log('node: ', node);
+
       // Adiciona o nó recém-criado à grade do grafo
       this.grid[x][y] = node;
+
+      // console.log(node);
+
       // Adiciona o nó recém-criado à lista de nós do grafo
       this.nodes.push(node);
     }
@@ -668,23 +704,23 @@ Graph.prototype.neighbors = function(node) {
     ret.push(grid[x][y + 1]);
   }
 
-  if (this.diagonal) {
-    if (grid[x - 1] && grid[x - 1][y - 1]) {
-      ret.push(grid[x - 1][y - 1]);
-    }
+  // if (this.diagonal) {
+  //   if (grid[x - 1] && grid[x - 1][y - 1]) {
+  //     ret.push(grid[x - 1][y - 1]);
+  //   }
 
-    if (grid[x + 1] && grid[x + 1][y - 1]) {
-      ret.push(grid[x + 1][y - 1]);
-    }
+  //   if (grid[x + 1] && grid[x + 1][y - 1]) {
+  //     ret.push(grid[x + 1][y - 1]);
+  //   }
 
-    if (grid[x - 1] && grid[x - 1][y + 1]) {
-      ret.push(grid[x - 1][y + 1]);
-    }
+  //   if (grid[x - 1] && grid[x - 1][y + 1]) {
+  //     ret.push(grid[x - 1][y + 1]);
+  //   }
 
-    if (grid[x + 1] && grid[x + 1][y + 1]) {
-      ret.push(grid[x + 1][y + 1]);
-    }
-  }
+  //   if (grid[x + 1] && grid[x + 1][y + 1]) {
+  //     ret.push(grid[x + 1][y + 1]);
+  //   }
+  // }
   // Retorna o array de vizinhos
   return ret;
 };
@@ -704,13 +740,13 @@ function Mapa({ caminhoEncontrado, grid }) {
             <div key={rowIndex} className="mapa-linha">
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
-                const isCaminho = caminhoEncontrado.some(node => node.x === cellIndex && node.y === rowIndex);
+                const isCaminho = caminhoEncontrado.some(node => node.x === rowIndex && node.y === cellIndex);
                 return (
                   <div 
                     key={cellIndex} 
                     className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
-                    <span className="mapa-coordenada-x">{`x: ${cellIndex}`}</span>  
-                    <span className="mapa-coordenada-y">{`y: ${rowIndex}`}</span>  
+                    <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
+                    <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>  
                     {/* <span className="mapa-celula-custo-fixo">{cell}</span> */}
                   </div>
                 );
@@ -725,8 +761,8 @@ function Mapa({ caminhoEncontrado, grid }) {
 
 function Astar() {
   const [grid, setGrid] = useState(matrizMapa);
-  const [startNode, setStartNode] = useState({ x: 27, y: 24 });
-  const [endNode, setEndNode] = useState({ x: 17, y: 39 });
+  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
+  const [endNode, setEndNode] = useState({ x: 39, y: 17 });
   // const [endNode, setEndNode] = useState({ x: 1, y: 24 });
   // const [endNode, setEndNode] = useState({ x: 32, y: 5 });
   const graph = new Graph(grid);
