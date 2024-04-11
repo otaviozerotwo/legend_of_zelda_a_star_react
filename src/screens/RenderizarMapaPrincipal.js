@@ -4,6 +4,7 @@ import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import TelaMapaPrincipal from './MapaPrincipal';
+import entradasDungeons from '../utils/EntradasDungeons'
 
 function RenderizarMapaPrincipal () {
   const [grid] = useState(gridHyrule);
@@ -16,12 +17,6 @@ function RenderizarMapaPrincipal () {
 
   // Função para executar a busca A* quando o botão for clicado
   const handleSearch = () => {
-    const entradasDungeons = [
-      { x: 39, y: 17 }, // entrada Dungeon 1
-      { x: 24, y: 1 }, // entrada Dungeon 2
-      { x: 5, y: 32 } // entrada Dungeon 3
-    ];
-
     const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
     // setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
