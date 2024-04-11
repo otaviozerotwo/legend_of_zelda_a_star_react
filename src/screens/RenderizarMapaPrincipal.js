@@ -13,19 +13,21 @@ function RenderizarMapaPrincipal () {
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
   const navegar = useNavigate()
+  const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
 
   // Função para executar a busca A* quando o botão for clicado
   const iniciarBusca = () => {
-    const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
     
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
-    
-    return setCaminhoEncontrado;
   };
 
   const entrarNaDungeon = () => {
-    if (caminhoEncontrado.x === entradasDungeons.x && caminhoEncontrado.y === entradasDungeons.y){
-      navegar('/dungeon_1')
+    if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
+      navegar('/dungeon_1');
+    } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
+      navegar('/dungeon_2');
+    } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
+      navegar('/dungeon_3');
     }
   };
 
