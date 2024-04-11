@@ -127,6 +127,22 @@
   background-color: #548DD4;
 }
 
+.cell-dungeon-value-0 {
+  background-color: blue;
+}
+
+.cell-dungeon-value-10 {
+  background-color: #FFFFFF
+}
+
+.cell-dungeon-value-99 {
+  background-color: #888887;;
+}
+
+.cell-dungeon-value-100 {
+  background-color: black;
+}
+
 .caminho {
   background-color: purple;
 }
