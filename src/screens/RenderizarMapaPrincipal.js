@@ -5,28 +5,34 @@ import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import TelaMapaPrincipal from './MapaPrincipal';
 import entradasDungeons from '../utils/EntradasDungeons'
+import { useNavigate } from 'react-router-dom';
 
 function RenderizarMapaPrincipal () {
   const [grid] = useState(gridHyrule);
   const [startNode] = useState({ x: 24, y: 27 });
-  // const [endNode, setEndNode] = useState({ x: 39, y: 17 }); // entrada Dungeon 1
-  // const [endNode, setEndNode] = useState({ x: 24, y: 1 }); // entrada Dungeon 2
-  // const [endNode, setEndNode] = useState({ x: 5, y: 32 }); // entrada Dungeon 3
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
+  const navegar = useNavigate()
 
   // Função para executar a busca A* quando o botão for clicado
-  const handleSearch = () => {
+  const iniciarBusca = () => {
     const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
-    // setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
+    
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
     
     return setCaminhoEncontrado;
   };
 
+  const entrarNaDungeon = () => {
+    if (caminhoEncontrado.x === entradasDungeons.x && caminhoEncontrado.y === entradasDungeons.y){
+      navegar('/dungeon_1')
+    }
+  };
+
   return (
     <>
-      <button onClick={handleSearch}>Buscar</button>
+      <button onClick={iniciarBusca}>Buscar</button>
+      <button onClick={entrarNaDungeon}>Entrar na Dungeon</button>
       <TelaMapaPrincipal caminhoEncontrado={caminhoEncontrado} grid={grid}/>
     </>
   ); 
