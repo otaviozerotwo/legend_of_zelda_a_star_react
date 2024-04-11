@@ -1,4 +1,4 @@
-const gridDungeon_1 = [
+const gridDungeon1 = [
   [
     99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
     99, 99, 99, 99, 99, 99, 99, 99, 99,
@@ -113,4 +113,4 @@ const gridDungeon_1 = [
   ],
 ];
 
-export default gridDungeon_1;
+export default gridDungeon1;

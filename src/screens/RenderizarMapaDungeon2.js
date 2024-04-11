@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import gridDungeon_1 from '../data/GridMapaDungeon_1';
+import gridDungeon2 from '../data/GridMapaDungeon2';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import TelaMapaDungeon from './MapaDungeon';
 
-function RenderizarMapaPrincipal () {
-  const [grid] = useState(gridDungeon_1);
-  const [startNode] = useState({ x: 14, y: 26 });
-  const [endNode] = useState({ x: 13, y: 3 });
+function RenderizarMapaDungeon2 () {
+  const [grid] = useState(gridDungeon2);
+  const [startNode] = useState({ x: 13, y: 25 });
+  const [endNode] = useState({ x: 13, y: 2 });
   const graph = new Graph(grid);
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
@@ -26,4 +26,4 @@ function RenderizarMapaPrincipal () {
   ); 
 };
 
-export default RenderizarMapaPrincipal;
+export default RenderizarMapaDungeon2;
