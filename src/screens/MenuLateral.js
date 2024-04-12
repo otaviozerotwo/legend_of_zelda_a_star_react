@@ -1,8 +1,12 @@
+import IniciarBusca from "../buttons/IniciarJogo";
+import EntrarDungeon from "../buttons/EntrarDungeon";
+
 const MenuLateral = () => {
   return (
     <div className="container">
       <div className="menu-lateral">
-        <h1>Inserir botão aqui</h1>       
+        <IniciarBusca />
+        <EntrarDungeon />     
       </div>
     </div>
   );

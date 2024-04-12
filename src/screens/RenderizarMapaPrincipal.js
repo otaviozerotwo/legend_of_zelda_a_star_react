@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import gridHyrule from '../data/GridMapaPrincipal';
 import TelaMapaPrincipal from './MapaPrincipal';
-import IniciarBusca from '../buttons/IniciarJogo';
-import EntrarDungeon from '../buttons/EntrarDungeon';
+import MenuLateral from './MenuLateral';
 
 function RenderizarMapaPrincipal () {
   const [grid] = useState(gridHyrule);
 
   return (
     <>
-      <IniciarBusca />
-      <EntrarDungeon />
-      <TelaMapaPrincipal grid={grid}/>
+      <div className="container">
+        <MenuLateral />
+        <TelaMapaPrincipal grid={grid}/>
+      </div>
     </>
   ); 
 };
