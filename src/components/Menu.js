@@ -15,9 +15,11 @@ const Menu = () => {
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const rotaAtual = useLocation();
+  const [mapaPercorrido, setMapaPercorrido] = useState(false);
 
   const PercorrerMapa = () => {
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
+    setMapaPercorrido(true);
   };
 
   const EntrarDungeon = () => {
@@ -37,7 +39,7 @@ const Menu = () => {
     <>
       <div className="menu-lateral">
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
-        {estaNaRotaRaiz && (
+        {estaNaRotaRaiz && mapaPercorrido && (
           <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
         )}
         {estaNaRotaDeDungeon && (
