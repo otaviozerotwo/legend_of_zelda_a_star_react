@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
@@ -13,7 +13,8 @@ const Menu = () => {
   const graph = new Graph(grid);
   const {setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
-  const navegar = useNavigate();
+  const navegarPara = useNavigate();
+  const rotaAtual = useLocation();
 
   const PercorrerMapa = () => {
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
@@ -21,23 +22,27 @@ const Menu = () => {
 
   const EntrarDungeon = () => {
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
-      navegar('/dungeon_1');
+      navegarPara('/dungeon_1');
     } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
-      navegar('/dungeon_2')
+      navegarPara('/dungeon_2')
     } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
-      navegar('/dungeon_3');
+      navegarPara('/dungeon_3');
     }
   };
+
+  const estaNaRotaRaiz = rotaAtual.pathname === '/';
+  const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
 
   return (
     <>
       <div className="menu-lateral">
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
-        <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
-        {/* <Link to="/" className="btn-menu-lateral">Hyrule</Link>
-        <Link to="/dungeon_1" className="btn-menu-lateral">Dungeon1</Link>
-        <Link to="/dungeon_2" className="btn-menu-lateral">Dungeon2</Link>
-        <Link to="/dungeon_3" className="btn-menu-lateral">Dungeon3</Link> */}
+        {estaNaRotaRaiz && (
+          <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
+        )}
+        {estaNaRotaDeDungeon && (
+          <button onClick={() => navegarPara('/')} className="btn-menu-lateral">Voltar</button>
+        )}
       </div>
     </>
   )
