@@ -11,14 +11,15 @@ const Menu = () => {
   const [grid] = useState(gridHyrule);
   const [startNode] = useState({ x: 24, y: 27 });
   const graph = new Graph(grid);
-  const {setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
+  const { caminhoEncontrado, setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const rotaAtual = useLocation();
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
 
   const PercorrerMapa = () => {
-    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
+    const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
+    setCaminhoEncontrado(caminho);
     setMapaPercorrido(true);
   };
 
@@ -46,6 +47,17 @@ const Menu = () => {
           <button onClick={() => navegarPara('/')} className="btn-menu-lateral">Voltar</button>
         )}
       </div>
+      {caminhoEncontrado && (
+        <div>
+          {/* <h2>Caminho Encontrado:</h2>
+          <pre>{JSON.stringify(caminhoEncontrado, null, 2)}</pre> */}
+          <ul>
+            {caminhoEncontrado.map((node, index) => (
+              <li key={index}>f: {node.f}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </>
   )
 }
