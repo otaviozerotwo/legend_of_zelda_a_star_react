@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
+import { useCustoCaminho } from '../context/CustoCaminhoContext';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
@@ -16,6 +17,7 @@ const Menu = () => {
   const navegarPara = useNavigate();
   const rotaAtual = useLocation();
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
+  const { atualizaCustoTotal } = useCustoCaminho();
 
   const PercorrerMapa = () => {
     const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
@@ -33,6 +35,16 @@ const Menu = () => {
     }
   };
 
+  const calcularCustoCaminho = (caminho) => {
+    let custoTotal = 0;
+
+    caminho.forEach(node => {
+      custoTotal += node.weight;
+    });
+
+    atualizaCustoTotal(custoTotal)
+  }
+
   const estaNaRotaRaiz = rotaAtual.pathname === '/';
   const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
 
@@ -40,24 +52,33 @@ const Menu = () => {
     <>
       <div className="menu-lateral">
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+
+        {mapaPercorrido && (
+          <button onClick={calcularCustoCaminho(caminhoEncontrado)} className="btn-menu-lateral">Custo Caminho</button>
+        )}
+
         {estaNaRotaRaiz && mapaPercorrido && (
           <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
         )}
+
         {estaNaRotaDeDungeon && (
           <button onClick={() => navegarPara('/')} className="btn-menu-lateral">Voltar</button>
         )}
+        
       </div>
-      {caminhoEncontrado && (
+      {/* {caminhoEncontrado && (
         <div>
-          {/* <h2>Caminho Encontrado:</h2>
-          <pre>{JSON.stringify(caminhoEncontrado, null, 2)}</pre> */}
-          <ul>
-            {caminhoEncontrado.map((node, index) => (
-              <li key={index}>f: {node.f}</li>
-            ))}
-          </ul>
+          {caminhoEncontrado.map((node, index) => (
+            <>
+              <div>
+                <span key={index}>x: {node.x}</span>
+                <span key={index}> y: {node.y}</span>
+                <span key={index}> weight: {node.weight}</span>
+              </div>
+            </>
+          ))}
         </div>
-      )}
+      )} */}
     </>
   )
 }

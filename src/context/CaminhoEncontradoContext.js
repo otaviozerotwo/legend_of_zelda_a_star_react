@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { CustoCaminhoProvider } from './CustoCaminhoContext';
 
 export const CaminhoEncontradoContext = createContext();
 
@@ -6,7 +7,9 @@ export const CaminhoEncontradoProvider = ({ children }) => {
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
   return (
     <CaminhoEncontradoContext.Provider value={{ caminhoEncontrado, setCaminhoEncontrado }}>
-      {children}
+      <CustoCaminhoProvider>
+        {children}
+      </CustoCaminhoProvider>
     </CaminhoEncontradoContext.Provider>
   );
 };
