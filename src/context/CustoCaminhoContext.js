@@ -1,8 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useState } from 'react';
 
 export const CustoCaminhoContext = createContext();
-
-export const useCustoCaminho = () => useContext(CustoCaminhoContext);
 
 export const CustoCaminhoProvider = ({ children }) => {
   const [custoTotal, setCustoTotal] = useState(0);
@@ -12,7 +10,7 @@ export const CustoCaminhoProvider = ({ children }) => {
   };
 
   return (
-    <CustoCaminhoContext.Provider value={{ custoTotal, atualizaCustoTotal }}>
+    <CustoCaminhoContext.Provider value={{ custoTotal, setCustoTotal, atualizaCustoTotal }}>
       {children}
     </CustoCaminhoContext.Provider>
   );

@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
-import { useCustoCaminho } from '../context/CustoCaminhoContext';
+import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
@@ -12,17 +12,29 @@ const Menu = () => {
   const [grid] = useState(gridHyrule);
   const [startNode] = useState({ x: 24, y: 27 });
   const graph = new Graph(grid);
-  const { caminhoEncontrado, setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
+  const { setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const rotaAtual = useLocation();
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
-  const { atualizaCustoTotal } = useCustoCaminho();
+  const { atualizaCustoTotal, custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
+
+  const calcularCustoCaminho = (caminho) => {
+    let custoTotal = 0;
+
+    caminho.forEach(node => {
+      custoTotal += node.weight;
+    });
+
+    atualizaCustoTotal(custoTotal);
+    setCustoTotal(custoTotal);
+  };
 
   const PercorrerMapa = () => {
     const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
     setCaminhoEncontrado(caminho);
     setMapaPercorrido(true);
+    calcularCustoCaminho(caminho);
   };
 
   const EntrarDungeon = () => {
@@ -35,16 +47,6 @@ const Menu = () => {
     }
   };
 
-  const calcularCustoCaminho = (caminho) => {
-    let custoTotal = 0;
-
-    caminho.forEach(node => {
-      custoTotal += node.weight;
-    });
-
-    atualizaCustoTotal(custoTotal)
-  }
-
   const estaNaRotaRaiz = rotaAtual.pathname === '/';
   const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
 
@@ -53,10 +55,6 @@ const Menu = () => {
       <div className="menu-lateral">
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
 
-        {mapaPercorrido && (
-          <button onClick={calcularCustoCaminho(caminhoEncontrado)} className="btn-menu-lateral">Custo Caminho</button>
-        )}
-
         {estaNaRotaRaiz && mapaPercorrido && (
           <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
         )}
@@ -64,8 +62,11 @@ const Menu = () => {
         {estaNaRotaDeDungeon && (
           <button onClick={() => navegarPara('/')} className="btn-menu-lateral">Voltar</button>
         )}
-        
+
+        <div>{`Custo Total: ${custoTotal}`}</div>
+
       </div>
+      
       {/* {caminhoEncontrado && (
         <div>
           {caminhoEncontrado.map((node, index) => (
