@@ -23,30 +23,20 @@ const Menu = () => {
   const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
 
-  // const calcularCustoCaminho = (caminho) => {
-  //   let custo = 0;
-
-  //   caminho.forEach(node => {
-  //     custo += node.weight;
-  //   });
-
-  //   atualizaCustoTotal(custo);
-  // };
-
   const PercorrerMapa = () => {
     if (estaNaRotaRaiz) {
       const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
 
       setCaminhoEncontrado(caminho);
       setMapaPercorrido(true);
-      // calcularCustoCaminho(caminho);
+  
     } else {
       setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
       const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
 
       setCaminhoEncontrado(caminho);
       setMapaPercorrido(true);
-      // calcularCustoCaminho(caminho);
+      
     }
     
   };
@@ -85,8 +75,6 @@ const Menu = () => {
     }
   }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, setCustoTotal]);
   
-  
-
   return (
     <>
       <div className="menu-lateral">
