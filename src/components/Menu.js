@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
@@ -10,45 +10,82 @@ import gridHyrule from '../data/GridHyrule';
 
 const Menu = () => {
   const [grid] = useState(gridHyrule);
-  const [startNode] = useState({ x: 24, y: 27 });
+  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
+  const [endNode, setEndNode] = useState({ x: 6, y: 5 });
   const graph = new Graph(grid);
-  const { setCaminhoEncontrado} = useContext(CaminhoEncontradoContext);
+  const { caminhoEncontrado, setCaminhoEncontrado } = useContext(CaminhoEncontradoContext);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const rotaAtual = useLocation();
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
-  const { atualizaCustoTotal, custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
+  const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
+  const estaNaRotaRaiz = rotaAtual.pathname === '/';
+  const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
+  const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
 
-  const calcularCustoCaminho = (caminho) => {
-    let custoTotal = 0;
+  // const calcularCustoCaminho = (caminho) => {
+  //   let custo = 0;
 
-    caminho.forEach(node => {
-      custoTotal += node.weight;
-    });
+  //   caminho.forEach(node => {
+  //     custo += node.weight;
+  //   });
 
-    atualizaCustoTotal(custoTotal);
-    setCustoTotal(custoTotal);
-  };
+  //   atualizaCustoTotal(custo);
+  // };
 
   const PercorrerMapa = () => {
-    const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
-    setCaminhoEncontrado(caminho);
-    setMapaPercorrido(true);
-    calcularCustoCaminho(caminho);
+    if (estaNaRotaRaiz) {
+      const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
+
+      setCaminhoEncontrado(caminho);
+      setMapaPercorrido(true);
+      // calcularCustoCaminho(caminho);
+    } else {
+      setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
+      const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
+
+      setCaminhoEncontrado(caminho);
+      setMapaPercorrido(true);
+      // calcularCustoCaminho(caminho);
+    }
+    
   };
 
   const EntrarDungeon = () => {
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
+      setStartNode({ x: 14, y: 26 });
+      setEndNode({ x: 13, y: 3 });
       navegarPara('/dungeon_1');
     } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
+      setStartNode({ x: 13, y: 25 });
+      setEndNode({ x: 13, y: 2 });
       navegarPara('/dungeon_2')
     } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
       navegarPara('/dungeon_3');
     }
   };
 
-  const estaNaRotaRaiz = rotaAtual.pathname === '/';
-  const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
+  useEffect(() => {
+    if (mapaPercorrido && caminhoEncontrado) {
+      const interval = setInterval(() => {
+        const currentNode = caminhoEncontrado[celulaAtualIndex];
+
+        if (currentNode) {
+          setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
+        }
+
+        setCelulaAtualIndex(prevIndex => prevIndex + 1);
+
+        if (currentNode && currentNode.x === endNode.x && currentNode.y === endNode.y) {
+          clearInterval(interval);
+        }
+      }, 200);
+
+      return () => clearInterval(interval);
+    }
+  }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, setCustoTotal]);
+  
+  
 
   return (
     <>

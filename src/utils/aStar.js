@@ -43,52 +43,31 @@ function getHeap() {
 const astar = {
   // Implementação da função de busca A*
   search: function(graph, start, end, options) {
-    
-    console.log('1. Entrei na função search');
-    console.log('2. grafo antes de chamar cleanDirty: ', graph);
-
     // Limpa os nós marcados como sujos no grafo
     graph.cleanDirty();
-    
-    console.log('3. grafo após chamar cleanDirty: ', graph);
 
     // Configurações opcionais para a busca A*
     options = options || {};
-
-    console.log('4. Valor de options: ', options);
 
     // Heurística a ser usada, padrão é a distância de euclidean
     // var heuristic = options.heuristic || astar.heuristics.euclidean;
     var heuristic = options.heuristic || astar.heuristics.manhattan;
 
-    console.log('5. Valor heuristica: ', heuristic);
-
     // Indica se deve retornar o caminho para o nó mais próximo se o destino for inalcançável
     var closest = options.closest || false;
-
-    console.log('6. Valor closest: ', closest);
   
     // Cria uma BinaryHeap para manter os nós abertos
     var openHeap = getHeap();
 
-    console.log('7. Valor openHeap: ', openHeap);
-
     // Define o nó inicial como o mais próximo, se necessário
     var closestNode = start;
-
-    console.log('8. Valor closestNode: ', closestNode);
   
     // Calcula a heurística para o nó inicial e marca-o como sujo
     start.h = heuristic(start, end);
     graph.markDirty(start);
-
-    console.log('9. Valor start.h: ', start.h);
-    console.log('10. Valor grafo após executar markDirty: ', graph);
   
     // Adiciona o nó inicial à heap aberta
     openHeap.push(start);
-
-    console.log('11. Valor openHeap linha 331: ', openHeap);
   
     // Loop principal da busca A*
     while (openHeap.size() > 0) {
@@ -139,7 +118,6 @@ const astar = {
           
           // Se a opção closest estiver ativada, atualiza o nó mais próximo
           if (closest) {
-            console.log('Entrei no if da linha 353');
             if (neighbor.h < closestNode.h || (neighbor.h === closestNode.h && neighbor.g < closestNode.g)) {
               closestNode = neighbor;
             }
@@ -158,7 +136,6 @@ const astar = {
   
     // Se a opção closest estiver ativada, retorna o caminho para o nó mais próximo
     if (closest) {
-      console.log('Caminho para o nó mais próximo: ', pathTo);
       return pathTo(closestNode);
     }
 
