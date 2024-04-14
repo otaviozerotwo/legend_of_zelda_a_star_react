@@ -1,6 +1,7 @@
 :root {
   display: flex;
   justify-content: flex-start;
+  background-color: #D1C368;
 }
 
 .container {
@@ -9,9 +10,27 @@
   height: 100vh; /* Define a altura total do container */
 }
 
-.menu-lateral {
-  width: 200px; /* Define a largura do menu lateral */
-  padding: 20px; /* Define o espaçamento interno do menu lateral */
+.menu-lateral,
+.resultados {
+  width: 250px; /* Define a largura do menu lateral */
+  padding: 5px 20px; /* Define o espaçamento interno do menu lateral */
+  text-align: center;
+}
+
+.titulo-h2 {
+  font-family: 'HYLIA SERIF';
+  color: #c1232d;
+}
+
+.resultados-custo-total {
+  display: block;
+  width: 100%;
+  font-family: 'REGGAE ONE';
+  font-size: 20px;
+  background-color: #7B79C6;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .mapa-container {
@@ -82,8 +101,9 @@
   width: 100%;
   padding: 10px 20px;
   margin-bottom: 10px;
+  font-family: 'REGGAE ONE';
   font-size: 16px;
-  background-color: #007bff;
+  background-color: #7B79C6;
   color: #fff;
   border: 1px solid black;
   border-radius: 5px;
@@ -92,7 +112,7 @@
 }
 
 .btn-menu-lateral:hover {
-  background-color: #0056b3;
+  background-color: #6765A6;
 }
 
 .cell-hyrule-value-1 {

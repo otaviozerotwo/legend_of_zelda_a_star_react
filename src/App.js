@@ -1,11 +1,10 @@
 import { Outlet } from 'react-router-dom';
 
-import Menu from './components/Menu';
+import './assets/fonts.css';
 
 function App() {
   return (
     <div className="container">
-      <Menu />
       <Outlet />
     </div>
   );

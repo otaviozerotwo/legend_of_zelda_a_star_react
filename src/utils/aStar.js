@@ -74,7 +74,7 @@ const astar = {
       // Remove o nó com a menor pontuação da heap aberta
       var currentNode = openHeap.pop();
 
-      console.log('12. Valor currentNode dentro do loop: ', currentNode);
+      // console.log('12. Valor currentNode dentro do loop: ', currentNode);
   
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
@@ -90,7 +90,7 @@ const astar = {
       // Encontra todos os vizinhos do nó atual
       var neighbors = graph.neighbors(currentNode);
 
-      console.log('14. Valor neighbors: ', neighbors);
+      // console.log('14. Valor neighbors: ', neighbors);
   
       // Itera sobre os vizinhos
       for (var i = 0, il = neighbors.length; i < il; ++i) {

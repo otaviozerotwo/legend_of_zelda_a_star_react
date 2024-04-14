@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import gridDungeon1 from '../data/GridMapaDungeon1';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassNameDungeon';
 import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
@@ -6,6 +6,28 @@ import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
 const Dungeon1 = () => {
   const [grid] = useState(gridDungeon1);
   const { caminhoEncontrado } = useContext(CaminhoEncontradoContext);
+  const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
+  const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
+    // Inicializa uma matriz booleana para rastrear cada célula como não visitada
+    return grid.map(row => row.map(() => false));
+  });
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (celulaAtualIndex < caminhoEncontrado.length) {
+        const currentNode = caminhoEncontrado[celulaAtualIndex];
+        // Marca a célula atual como percorrida na matriz de células percorridas
+        setCelulasPercorridas(prevCelulasPercorridas => {
+          const newCelulasPercorridas = [...prevCelulasPercorridas];
+          newCelulasPercorridas[currentNode.x][currentNode.y] = true;
+          return newCelulasPercorridas;
+        });
+        setCelulaAtualIndex(prevIndex => prevIndex + 1);
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [caminhoEncontrado, celulaAtualIndex]);
 
   return (
     <div className="mapa-container">
@@ -14,11 +36,12 @@ const Dungeon1 = () => {
           <div key={rowIndex} className="mapa-linha">
             {row.map((cell, cellIndex) => {
               const className = atribuirClassNameParaCelula(cell);
-              const isCaminho = caminhoEncontrado.some(node => node.x === rowIndex && node.y === cellIndex);
+              const isCelulaAtual = celulaAtualIndex < caminhoEncontrado.length && caminhoEncontrado[celulaAtualIndex]?.x === rowIndex && caminhoEncontrado[celulaAtualIndex]?.y === cellIndex;
+              const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
               return (
                 <div 
                   key={cellIndex} 
-                  className={`mapa-celula ${className} ${isCaminho ? 'caminho' : ''}`} >
+                  className={`mapa-celula ${className} ${isCelulaAtual ? 'mapa-celula-posicao-atual' : ''} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido' : ''}`} >
                   {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
                   <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>   */}
                   {/* <span className="mapa-celula-custo-fixo">{cell}</span> */}
