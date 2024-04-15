@@ -23,8 +23,8 @@ const Hyrule = () => {
   const rotaAtual = useLocation();
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
-  const estaNaRotaRaiz = rotaAtual.pathname === '/';
-  const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
+  // const estaNaRotaRaiz = rotaAtual.pathname === '/';
+  // const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
 
   useEffect(() => {
@@ -68,13 +68,13 @@ const Hyrule = () => {
   }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex]);
 
   const PercorrerMapa = () => {
-    if (estaNaRotaRaiz) {
+    if (rotaAtual.pathname === '/') {
       // const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
 
       setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
       setMapaPercorrido(true);
   
-    } else {
+    } else if (rotaAtual.pathname === '/dungeon_1' || rotaAtual.pathname === '/dungeon_2' || rotaAtual.pathname === '/dungeon_3') {
       setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
       // const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
 
@@ -102,10 +102,11 @@ const Hyrule = () => {
     <>
       <MenuLateral 
         PercorrerMapa={PercorrerMapa}
-        estaNaRotaRaiz={estaNaRotaRaiz}
+        // estaNaRotaRaiz={estaNaRotaRaiz}
         mapaPercorrido={mapaPercorrido}
         EntrarDungeon={EntrarDungeon} 
-        estaNaRotaDeDungeon={estaNaRotaDeDungeon} 
+        // estaNaRotaDeDungeon={estaNaRotaDeDungeon}
+        rotaAtual={rotaAtual}
       />
       <div className="mapa-container">
         <div className="mapa-hyrule-container">

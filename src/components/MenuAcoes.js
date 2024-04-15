@@ -1,7 +1,24 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Menu = ({ PercorrerMapa, estaNaRotaRaiz, mapaPercorrido, EntrarDungeon, estaNaRotaDeDungeon }) => {
+const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual}) => {
   const navegarPara = useNavigate();
+  const [estaEmHyrule, setEstaEmHyrule] = useState(false);
+  const [estaNaDungeon, setEstaNaDungeon] = useState(false);
+
+  useEffect(() => {
+    if (mapaPercorrido && rotaAtual === '/') {
+      setEstaEmHyrule(true);
+    } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
+      setEstaNaDungeon(true);
+    }
+  }, [mapaPercorrido, rotaAtual]);
+  
+
+  console.log(rotaAtual);
+  console.log('estaEmHyrule: ', estaEmHyrule);
+  console.log('estaNaDungeon: ', estaNaDungeon);
+  console.log('mapaPercorrido: ', mapaPercorrido);
   
   return (
     <>
@@ -9,14 +26,14 @@ const Menu = ({ PercorrerMapa, estaNaRotaRaiz, mapaPercorrido, EntrarDungeon, es
         <div className="titulo-h2">
           <h2>Menu Ações</h2>
         </div>
-        
+
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
 
-        {estaNaRotaRaiz && mapaPercorrido && (
+        {estaEmHyrule && (
           <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
         )}
 
-        {estaNaRotaDeDungeon && (
+        {estaNaDungeon && (
           <button onClick={() => navegarPara('/')} className="btn-menu-lateral">Voltar</button>
         )}
 
