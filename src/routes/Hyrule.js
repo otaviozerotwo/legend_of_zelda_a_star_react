@@ -20,11 +20,9 @@ const Hyrule = () => {
   const { caminhoEncontrado, setCaminhoEncontrado } = useContext(CaminhoEncontradoContext);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
-  const rotaAtual = useLocation();
+  const rotaAtual = useLocation().pathname;
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
-  // const estaNaRotaRaiz = rotaAtual.pathname === '/';
-  // const estaNaRotaDeDungeon = ['/dungeon_1', '/dungeon_2', '/dungeon_3'].includes(rotaAtual.pathname);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
 
   useEffect(() => {
@@ -68,19 +66,17 @@ const Hyrule = () => {
   }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex]);
 
   const PercorrerMapa = () => {
-    if (rotaAtual.pathname === '/') {
-      // const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]);
-
+    if (rotaAtual === '/') {
       setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
+
       setMapaPercorrido(true);
   
-    } else if (rotaAtual.pathname === '/dungeon_1' || rotaAtual.pathname === '/dungeon_2' || rotaAtual.pathname === '/dungeon_3') {
+    } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
       setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
-      // const caminho = astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]);
 
       setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
-      setMapaPercorrido(true);
       
+      setMapaPercorrido(true);
     }
   };
 
@@ -102,10 +98,8 @@ const Hyrule = () => {
     <>
       <MenuLateral 
         PercorrerMapa={PercorrerMapa}
-        // estaNaRotaRaiz={estaNaRotaRaiz}
         mapaPercorrido={mapaPercorrido}
         EntrarDungeon={EntrarDungeon} 
-        // estaNaRotaDeDungeon={estaNaRotaDeDungeon}
         rotaAtual={rotaAtual}
       />
       <div className="mapa-container">

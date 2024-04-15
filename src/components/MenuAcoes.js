@@ -9,8 +9,13 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual}) => {
   useEffect(() => {
     if (mapaPercorrido && rotaAtual === '/') {
       setEstaEmHyrule(true);
+      setEstaNaDungeon(false);
     } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
+      setEstaEmHyrule(false);
       setEstaNaDungeon(true);
+    } else {
+      setEstaEmHyrule(false);
+      setEstaNaDungeon(false);
     }
   }, [mapaPercorrido, rotaAtual]);
   
