@@ -26,7 +26,7 @@ const Hyrule = () => {
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
 
   useEffect(() => {
-    if (mapaPercorrido && caminhoEncontrado) {
+    if (caminhoEncontrado) {
       const interval = setInterval(() => {
         if (celulaAtualIndex < caminhoEncontrado.length) {
           const currentNode = caminhoEncontrado[celulaAtualIndex];
@@ -40,7 +40,7 @@ const Hyrule = () => {
 
       return () => clearInterval(interval);
     }
-  }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, setCustoTotal]);
+  }, [caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, setCustoTotal]);
 
   const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
     // Inicializa uma matriz booleana para rastrear cada célula como não visitada
@@ -48,7 +48,7 @@ const Hyrule = () => {
   });
 
   useEffect(() => {
-    if (mapaPercorrido && caminhoEncontrado) {
+    if (caminhoEncontrado) {
       const interval = setInterval(() => {
         if (celulaAtualIndex < caminhoEncontrado.length) {
           const currentNode = caminhoEncontrado[celulaAtualIndex];
@@ -63,7 +63,7 @@ const Hyrule = () => {
 
       return () => clearInterval(interval);
     }
-  }, [mapaPercorrido, caminhoEncontrado, celulaAtualIndex]);
+  }, [caminhoEncontrado, celulaAtualIndex]);
 
   const PercorrerMapa = () => {
     if (rotaAtual === '/') {
@@ -82,12 +82,8 @@ const Hyrule = () => {
 
   const EntrarDungeon = () => {
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
-      setStartNode({ x: 14, y: 26 });
-      setEndNode({ x: 13, y: 3 });
       navegarPara('/dungeon_1');
     } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
-      setStartNode({ x: 13, y: 25 });
-      setEndNode({ x: 13, y: 2 });
       navegarPara('/dungeon_2')
     } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
       navegarPara('/dungeon_3');
