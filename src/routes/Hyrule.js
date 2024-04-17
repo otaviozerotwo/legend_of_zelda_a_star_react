@@ -6,7 +6,7 @@ import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
-import entradasDungeons from '../utils/EntradasDungeons'
+import entradasDungeons from '../utils/EntradasDungeons';
 import gridHyrule from '../data/GridHyrule';
 
 import MenuLateral from '../components/MenuAcoes';
