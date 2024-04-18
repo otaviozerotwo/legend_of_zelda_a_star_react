@@ -19,12 +19,6 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual}) => {
     }
   }, [mapaPercorrido, rotaAtual]);
   
-
-  console.log(rotaAtual);
-  console.log('estaEmHyrule: ', estaEmHyrule);
-  console.log('estaNaDungeon: ', estaNaDungeon);
-  console.log('mapaPercorrido: ', mapaPercorrido);
-  
   return (
     <>
       <div className="menu-lateral">
