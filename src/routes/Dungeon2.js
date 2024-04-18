@@ -12,7 +12,7 @@ import gridDungeon2 from '../data/GridMapaDungeon2';
 import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
-const Hyrule = () => {
+const Dungeon2 = () => {
   const [grid] = useState(gridDungeon2);
   const [startNode, setStartNode] = useState({ x: 13, y: 25 });
   const [endNode, setEndNode] = useState({ x: 13, y: 2 });
@@ -65,21 +65,11 @@ const Hyrule = () => {
   }, [caminhoEncontrado, celulaAtualIndex]);
 
   const PercorrerMapa = () => {
-    if (rotaAtual === '/') {
-      setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
-
-      setMapaPercorrido(true);
-  
-    } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
-      setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
-
-      setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
-      
-      setMapaPercorrido(true);
-    }
+    setEndNode(entradaMaisProxima.x, entradaMaisProxima.y);
+    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));  
+    setMapaPercorrido(true);
   };
 
-  
   return (
     <>
       <MenuLateral 
@@ -116,4 +106,4 @@ const Hyrule = () => {
   );
 };
 
-export default Hyrule;
+export default Dungeon2;
