@@ -5,25 +5,26 @@ import atribuirClassNameParaCelula from '../utils/AtribuirClassNameDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import gridDungeon1 from '../data/GridMapaDungeon1';
+import { useStartEndNodes } from '../context/StartEndNodesContext';
 
 import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
 const Dungeon1 = () => {
   const [grid] = useState(gridDungeon1);
-  const [startNode, setStartNode] = useState({ x: 14, y: 26 });
-  const [endNode, setEndNode] = useState({ x: 13, y: 3 });
+  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
   const rotaAtual = useLocation().pathname;
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
+  const [voltarEntradaClicado, setVoltarEntradaClicado] = useState(false);
 
   const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
   useEffect(() => {
-    if (percorrerMapaClicado && caminhoEncontrado) {
+    if ((percorrerMapaClicado || voltarEntradaClicado) && caminhoEncontrado) {
       const interval = setInterval(() => {
         if (celulaAtualIndex < caminhoEncontrado.length) {
           const currentNode = caminhoEncontrado[celulaAtualIndex];
@@ -37,7 +38,7 @@ const Dungeon1 = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, percorrerMapaClicado, setCustoTotal]);
+  }, [caminhoEncontrado, celulaAtualIndex, endNode, percorrerMapaClicado, setCustoTotal, voltarEntradaClicado]);
 
   const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
     // Inicializa uma matriz booleana para rastrear cada célula como não visitada
@@ -45,7 +46,7 @@ const Dungeon1 = () => {
   });
 
   useEffect(() => {
-    if (percorrerMapaClicado && caminhoEncontrado) {
+    if ((percorrerMapaClicado || voltarEntradaClicado) && caminhoEncontrado) {
       const interval = setInterval(() => {
         if (celulaAtualIndex < caminhoEncontrado.length) {
           const currentNode = caminhoEncontrado[celulaAtualIndex];
@@ -60,12 +61,21 @@ const Dungeon1 = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoEncontrado, celulaAtualIndex, percorrerMapaClicado]);
+  }, [caminhoEncontrado, celulaAtualIndex, percorrerMapaClicado, voltarEntradaClicado]);
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));  
     setMapaPercorrido(true);
+  };
+
+  const VoltarEntrada = () => {
+    setVoltarEntradaClicado(true);
+    const novoStartNode = {...endNode};
+    const novoEndNode = {...startNode};
+    setStartNode(endNode);
+    setEndNode(startNode);
+    setCaminhoEncontrado(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));
   };
 
   return (
@@ -74,6 +84,7 @@ const Dungeon1 = () => {
         PercorrerMapa={PercorrerMapa}
         mapaPercorrido={mapaPercorrido} 
         rotaAtual={rotaAtual}
+        VoltarEntrada={VoltarEntrada}
       />
       <div className="mapa-container">
         <div className="mapa-dungeon-container">

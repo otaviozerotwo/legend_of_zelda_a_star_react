@@ -7,14 +7,14 @@ import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import entradasDungeons from '../utils/EntradasDungeons';
 import gridHyrule from '../data/GridHyrule';
+import { useStartEndNodes } from '../context/StartEndNodesContext';
 
 import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
 const Hyrule = () => {
   const [grid] = useState(gridHyrule);
-  const [startNode, setStartNode] = useState({ x: 24, y: 27 });
-  const [endNode, setEndNode] = useState({ x: 6, y: 5 });
+  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
@@ -72,6 +72,7 @@ const Hyrule = () => {
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
 
     setMapaPercorrido(true);
+    setEndNode(entradaMaisProxima);
   };
 
   const EntrarDungeon = () => {
