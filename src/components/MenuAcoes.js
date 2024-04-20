@@ -20,9 +20,6 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual, VoltarE
       setMostrarBotaoPercorrer(true);
       setMostrarBotaoVoltar(false);
       setMostrarBotaoSair(false);
-      if (endNode === entradasDungeons.some) {
-        setMostrarBotaoEntrarDungeon(true);
-      }
     } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
       setEstaEmHyrule(false);
       setEstaNaDungeon(true);
@@ -38,7 +35,13 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual, VoltarE
       setMostrarBotaoVoltar(false);
       setMostrarBotaoSair(false);
     }
-  }, [endNode, mapaPercorrido, rotaAtual]);
+  }, [mapaPercorrido, rotaAtual]);
+
+  useEffect(() => {
+    if (entradasDungeons.includes(endNode)) {
+      setMostrarBotaoEntrarDungeon(true);
+    }
+  }, [endNode, mostrarBotaoEntrarDungeon]);
 
   return (
     <>
@@ -51,7 +54,7 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual, VoltarE
           <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
         )}
 
-        {estaEmHyrule && (
+        {estaEmHyrule && mostrarBotaoEntrarDungeon && (
           <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
         )}
 

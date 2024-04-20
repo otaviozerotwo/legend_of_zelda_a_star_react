@@ -14,7 +14,7 @@ import Resultados from '../components/Resultados';
 
 const Hyrule = () => {
   const [grid] = useState(gridHyrule);
-  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
+  const { startNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
