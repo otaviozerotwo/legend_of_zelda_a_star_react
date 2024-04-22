@@ -23,7 +23,7 @@ const Menu = ({ PercorrerMapa, mapaPercorrido, EntrarDungeon, rotaAtual, VoltarE
     } else if (rotaAtual === '/dungeon_1' || rotaAtual === '/dungeon_2' || rotaAtual === '/dungeon_3') {
       setEstaEmHyrule(false);
       setEstaNaDungeon(true);
-      setMostrarBotaoPercorrer(mapaPercorrido);
+      setMostrarBotaoPercorrer(true);
       setMostrarBotaoEntrarDungeon(false);
       setMostrarBotaoVoltar(false);
       setMostrarBotaoSair(false);

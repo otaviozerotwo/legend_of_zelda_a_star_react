@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
@@ -14,17 +15,16 @@ import Resultados from '../components/Resultados';
 
 const Hyrule = () => {
   const [grid] = useState(gridHyrule);
-  const { startNode, endNode, setEndNode } = useStartEndNodes();
+  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const rotaAtual = useLocation().pathname;
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
+  const { caminhoEncontrado, setCaminhoEncontrado } = useContext(CaminhoEncontradoContext);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
-
-  const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
 
   useEffect(() => {
     if (percorrerMapaClicado && caminhoEncontrado) {
@@ -79,6 +79,8 @@ const Hyrule = () => {
     setMapaPercorrido(false);
     
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
+      setStartNode({ x: 14, y: 26});
+      setEndNode({ x: 13, y: 3});
       navegarPara('/dungeon_1');
     } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
       navegarPara('/dungeon_2')
@@ -89,12 +91,21 @@ const Hyrule = () => {
   
   return (
     <>
-      <MenuLateral 
+      {/* <MenuLateral 
         PercorrerMapa={PercorrerMapa}
         mapaPercorrido={mapaPercorrido}
         EntrarDungeon={EntrarDungeon} 
         rotaAtual={rotaAtual}
-      />
+      /> */}
+      <div className="menu-lateral">
+        <div className="titulo-h2">
+          <h2>Menu Ações</h2>
+        </div>
+
+        <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+
+        <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
+      </div>
       <div className="mapa-container">
         <div className="mapa-hyrule-container">
           {grid.map((row, rowIndex) => (
