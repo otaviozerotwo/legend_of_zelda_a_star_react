@@ -77,6 +77,7 @@ const Hyrule = () => {
 
   const EntrarDungeon = () => {
     setMapaPercorrido(false);
+    setPercorrerMapaClicado(false);
     
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
       setStartNode({ x: 14, y: 26});
