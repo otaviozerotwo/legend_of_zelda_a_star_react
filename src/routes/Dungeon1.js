@@ -15,12 +15,13 @@ const Dungeon1 = () => {
   const graph = new Graph(grid);
   // const navegarPara = useNavigate();
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
-  const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
+  const [celulaAtualIndexIda, setCelulaAtualIndexIda] = useState(0);
+  const [celulaAtualIndexVolta, setCelulaAtualIndexVolta] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
   const [sairDungeonClicado, setSairDungeonClicado] = useState(false);
 
-  const [caminhoIda, setCaminhoIda] = useState(0);
-  const [caminhoVolta, setCaminhoVolta] = useState(0);
+  const [caminhoIda, setCaminhoIda] = useState([]);
+  const [caminhoVolta, setCaminhoVolta] = useState([]);
   
   const [celulasPercorridasIda, setCelulasPercorridasIda] = useState(() => {
     // Inicializa uma matriz booleana para rastrear cada célula como não visitada
@@ -35,22 +36,18 @@ const Dungeon1 = () => {
   useEffect(() => {
     if ((percorrerMapaClicado && caminhoIda) || (sairDungeonClicado && caminhoVolta)) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoIda.length) {
-          const currentNode = caminhoIda[celulaAtualIndex];
-          setCelulaAtualIndex(prevIndex => prevIndex + 1);
+        if (celulaAtualIndexIda < caminhoIda.length) {
+          const currentNode = caminhoIda[celulaAtualIndexIda];
+          setCelulaAtualIndexIda(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
-
-          console.log(currentNode);
 
           if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             clearInterval(interval);
           }
-        } else if (celulaAtualIndex < caminhoVolta.length) {
-          const currentNode = caminhoVolta[celulaAtualIndex];
-          setCelulaAtualIndex(prevIndex => prevIndex + 1);
+        } else if (celulaAtualIndexVolta < caminhoVolta.length) {
+          const currentNode = caminhoVolta[celulaAtualIndexVolta];
+          setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
-
-          console.log(currentNode);
 
           if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             clearInterval(interval);
@@ -60,15 +57,13 @@ const Dungeon1 = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoIda, caminhoVolta, celulaAtualIndex, endNode, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
+  }, [caminhoIda, caminhoVolta, celulaAtualIndexIda, celulaAtualIndexVolta, endNode, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
 
   useEffect(() => {
     if ((percorrerMapaClicado && caminhoIda) || (sairDungeonClicado && caminhoVolta)) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoIda.length) {
-          const currentNode = caminhoIda[celulaAtualIndex];
-
-          console.log(currentNode);
+        if (celulaAtualIndexIda < caminhoIda.length) {
+          const currentNode = caminhoIda[celulaAtualIndexIda];
 
           // Marca a célula atual como percorrida na matriz de células percorridas
           setCelulasPercorridasIda(prevCelulasPercorridas => {
@@ -76,14 +71,15 @@ const Dungeon1 = () => {
             newCelulasPercorridas[currentNode.x][currentNode.y] = true;
             return newCelulasPercorridas;
           });
-          
-          
-        } else if (celulaAtualIndex < caminhoVolta.length) {
-          const currentNode = caminhoVolta[celulaAtualIndex];
-          setCelulaAtualIndex(prevIndex => prevIndex + 1);
-          setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
 
-          console.log(currentNode);
+          if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
+            clearInterval(interval);
+          }
+          
+        } else if (celulaAtualIndexVolta < caminhoVolta.length) {
+          const currentNode = caminhoVolta[celulaAtualIndexVolta];
+          setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
+          setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
 
           setCelulasPercorridasVolta(prevCelulasPercorridas => {
             const newCelulasPercorridas = [...prevCelulasPercorridas];
@@ -99,7 +95,7 @@ const Dungeon1 = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoIda, caminhoVolta, celulaAtualIndex, endNode.x, endNode.y, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
+  }, [caminhoIda, caminhoVolta, celulaAtualIndexIda, celulaAtualIndexVolta, endNode.x, endNode.y, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
@@ -109,17 +105,16 @@ const Dungeon1 = () => {
   };
 
   const SairDungeon = () => {
-    setPercorrerMapaClicado(false);
-    setSairDungeonClicado(true);
-    const novoStartNode = endNode;
-    const novoEndNode = startNode;
-
-    console.log(novoStartNode);
-    console.log(novoEndNode);
-
-    setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
-    
-    // navegarPara('/');
+    if (caminhoIda.length > 0) {
+      setPercorrerMapaClicado(false);
+      setSairDungeonClicado(true);
+      const novoStartNode = endNode;
+      const novoEndNode = startNode;
+  
+      setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
+      
+      // navegarPara('/');
+    }
   };
   
   return (
@@ -140,9 +135,9 @@ const Dungeon1 = () => {
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
                 
-                const isCelulaAtualCaminhoIda = celulaAtualIndex < caminhoIda.length && caminhoIda[celulaAtualIndex]?.x === rowIndex && caminhoIda[celulaAtualIndex]?.y === cellIndex;
+                const isCelulaAtualCaminhoIda = celulaAtualIndexIda < caminhoIda.length && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
                 
-                const isCelulaAtualCaminhoVolta = celulaAtualIndex < caminhoVolta.length && caminhoVolta[celulaAtualIndex]?.x === rowIndex && caminhoIda[celulaAtualIndex]?.y === cellIndex;
+                const isCelulaAtualCaminhoVolta = celulaAtualIndexVolta < caminhoVolta.length && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
                 
                 const isCelulaPercorridaCaminhoIda = celulasPercorridasIda[rowIndex][cellIndex];
                 const isCelulaPercorridaCaminhoVolta = celulasPercorridasVolta[rowIndex][cellIndex];
@@ -150,7 +145,7 @@ const Dungeon1 = () => {
                 return (
                   <div 
                     key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCelulaAtualCaminhoIda ? 'mapa-celula-posicao-atual' : ''} ${isCelulaPercorridaCaminhoIda ? 'mapa-celula-caminho-percorrido' : ''} ${isCelulaAtualCaminhoVolta ? 'mapa-celula-posicao-atual' : ''} ${isCelulaPercorridaCaminhoVolta ? 'mapa-celula-caminho-percorrido' : ''}`} >
+                    className={`mapa-celula ${className} ${isCelulaAtualCaminhoIda ? 'mapa-celula-posicao-atual-caminho-ida' : ''} ${isCelulaPercorridaCaminhoIda ? 'mapa-celula-caminho-percorrido-ida' : ''} ${isCelulaAtualCaminhoVolta ? 'mapa-celula-posicao-atual-caminho-volta' : ''} ${isCelulaPercorridaCaminhoVolta ? 'mapa-celula-caminho-percorrido-volta' : ''}`} >
                     
                     
                     {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  

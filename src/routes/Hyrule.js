@@ -119,7 +119,7 @@ const Hyrule = () => {
                 return (
                   <div 
                     key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCelulaAtual ? 'mapa-celula-posicao-atual' : ''} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido' : ''}`} >
+                    className={`mapa-celula ${className} ${isCelulaAtual ? 'mapa-celula-posicao-atual-caminho-ida' : ''} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido-ida' : ''}`} >
                     
                     {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
                     <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>   */}
