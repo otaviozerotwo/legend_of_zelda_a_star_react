@@ -28,7 +28,7 @@ const Dungeon1 = () => {
   });
 
   useEffect(() => {
-    if ((percorrerMapaClicado && caminhoIda) || (sairDungeonClicado && caminhoVolta)) {
+    if (percorrerMapaClicado && caminhoIda) {
       const interval = setInterval(() => {
         if (celulaAtualIndexIda < caminhoIda.length) {
           const currentNode = caminhoIda[celulaAtualIndexIda];
@@ -38,13 +38,15 @@ const Dungeon1 = () => {
           if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             clearInterval(interval);
           }
-        } else if (celulaAtualIndexVolta < caminhoVolta.length) {
-          const currentNode = caminhoVolta[celulaAtualIndexVolta];
-          setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
-          setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
+        } else if (sairDungeonClicado && caminhoVolta) {
+          if (celulaAtualIndexVolta < caminhoVolta.length) {
+            const currentNode = caminhoVolta[celulaAtualIndexVolta];
+            setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
+            setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
 
-          if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
-            clearInterval(interval);
+            if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
+              clearInterval(interval);
+            }
           }
         }
       }, 200);
@@ -70,7 +72,7 @@ const Dungeon1 = () => {
             clearInterval(interval);
           }
           
-        } else if (celulaAtualIndexVolta < caminhoVolta.length) {
+        } else if (celulaAtualIndexVolta < caminhoVolta.length - 1) {
           const currentNode = caminhoVolta[celulaAtualIndexVolta];
           setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
@@ -134,7 +136,7 @@ const Dungeon1 = () => {
 
                 const isCelulaAtualCaminhoIda = celulaAtualIndexIda < caminhoIda.length && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
                 
-                const isCelulaAtualCaminhoVolta = celulaAtualIndexVolta < caminhoVolta.length && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
+                const isCelulaAtualCaminhoVolta = (celulaAtualIndexVolta < (caminhoVolta.length - 1)) && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
                 
                 return (
                   <div 
