@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassNameDungeon';
 import astar from '../utils/aStar';
@@ -11,9 +11,9 @@ import Resultados from '../components/Resultados';
 
 const Dungeon1 = () => {
   const [grid] = useState(gridDungeon1);
-  const { startNode, endNode } = useStartEndNodes();
+  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
-  // const navegarPara = useNavigate();
+  const navegarPara = useNavigate();
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndexIda, setCelulaAtualIndexIda] = useState(0);
   const [celulaAtualIndexVolta, setCelulaAtualIndexVolta] = useState(0);
@@ -100,7 +100,7 @@ const Dungeon1 = () => {
     setCaminhoIda(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
   };
 
-  const SairDungeon = () => {
+  const VoltarParaEntrada = () => {
     if (caminhoIda.length > 0) {
       setCelulasPercorridas(Array.from({ length: grid.length }, () => Array(grid[0].length).fill(false)));
       setPercorrerMapaClicado(false);
@@ -109,10 +109,14 @@ const Dungeon1 = () => {
       const novoEndNode = startNode;
   
       setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
-      
-      // navegarPara('/');
     }
   };
+
+  const SairDungeon = () => {
+    setStartNode({ x: 39, y: 17 });
+    setEndNode({ x: 6, y: 5 });
+    navegarPara('/');
+  }
   
   return (
     <>
@@ -122,6 +126,8 @@ const Dungeon1 = () => {
         </div>
 
         <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+
+        <button onClick={VoltarParaEntrada} className="btn-menu-lateral">Voltar para Entrada</button>
 
         <button onClick={SairDungeon} className="btn-menu-lateral">Sair da Dungeon</button>
       </div>
