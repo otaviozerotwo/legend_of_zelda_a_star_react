@@ -168,8 +168,8 @@
   border-radius: 50%;
 
 }
-.mapa-celula-posicao-atual-caminho-volta {
-  background-color: blue;
+.mapa-celula-posicao-atual {
+  background-color: yellow;
   border-radius: 50%;
 }
 
@@ -177,6 +177,6 @@
   background-color: purple;
 }
 
-.mapa-celula-caminho-percorrido-volta {
+.mapa-celula-caminho-percorrido {
   background-color: blue;
 }

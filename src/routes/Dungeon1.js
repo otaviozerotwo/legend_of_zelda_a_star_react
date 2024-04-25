@@ -22,14 +22,8 @@ const Dungeon1 = () => {
 
   const [caminhoIda, setCaminhoIda] = useState([]);
   const [caminhoVolta, setCaminhoVolta] = useState([]);
-  
-  const [celulasPercorridasIda, setCelulasPercorridasIda] = useState(() => {
-    // Inicializa uma matriz booleana para rastrear cada célula como não visitada
-    return grid.map(row => row.map(() => false));
-  });
 
-  const [celulasPercorridasVolta, setCelulasPercorridasVolta] = useState(() => {
-    // Inicializa uma matriz booleana para rastrear cada célula como não visitada
+  const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
     return grid.map(row => row.map(() => false));
   });
 
@@ -66,7 +60,7 @@ const Dungeon1 = () => {
           const currentNode = caminhoIda[celulaAtualIndexIda];
 
           // Marca a célula atual como percorrida na matriz de células percorridas
-          setCelulasPercorridasIda(prevCelulasPercorridas => {
+          setCelulasPercorridas(prevCelulasPercorridas => {
             const newCelulasPercorridas = [...prevCelulasPercorridas];
             newCelulasPercorridas[currentNode.x][currentNode.y] = true;
             return newCelulasPercorridas;
@@ -81,7 +75,7 @@ const Dungeon1 = () => {
           setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
 
-          setCelulasPercorridasVolta(prevCelulasPercorridas => {
+          setCelulasPercorridas(prevCelulasPercorridas => {
             const newCelulasPercorridas = [...prevCelulasPercorridas];
             newCelulasPercorridas[currentNode.x][currentNode.y] = true;
             return newCelulasPercorridas;
@@ -106,6 +100,7 @@ const Dungeon1 = () => {
 
   const SairDungeon = () => {
     if (caminhoIda.length > 0) {
+      setCelulasPercorridas(Array.from({ length: grid.length }, () => Array(grid[0].length).fill(false)));
       setPercorrerMapaClicado(false);
       setSairDungeonClicado(true);
       const novoStartNode = endNode;
@@ -134,18 +129,17 @@ const Dungeon1 = () => {
             <div key={rowIndex} className="mapa-linha">
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
-                
+
+                const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
+
                 const isCelulaAtualCaminhoIda = celulaAtualIndexIda < caminhoIda.length && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
                 
                 const isCelulaAtualCaminhoVolta = celulaAtualIndexVolta < caminhoVolta.length && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
                 
-                const isCelulaPercorridaCaminhoIda = celulasPercorridasIda[rowIndex][cellIndex];
-                const isCelulaPercorridaCaminhoVolta = celulasPercorridasVolta[rowIndex][cellIndex];
-                
                 return (
                   <div 
                     key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCelulaAtualCaminhoIda ? 'mapa-celula-posicao-atual-caminho-ida' : ''} ${isCelulaPercorridaCaminhoIda ? 'mapa-celula-caminho-percorrido-ida' : ''} ${isCelulaAtualCaminhoVolta ? 'mapa-celula-posicao-atual-caminho-volta' : ''} ${isCelulaPercorridaCaminhoVolta ? 'mapa-celula-caminho-percorrido-volta' : ''}`} >
+                    className={`mapa-celula ${className} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido' : ''} ${isCelulaAtualCaminhoIda ? 'mapa-celula-posicao-atual' : ''} ${isCelulaAtualCaminhoVolta ? 'mapa-celula-posicao-atual' : ''}`} >
                     
                     
                     {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
