@@ -93,6 +93,8 @@ const Hyrule = () => {
       navegarPara('/dungeon_2');
 
     } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
+      setStartNode({ x: 14, y: 25 });
+      setEndNode({ x: 15, y: 19 });
       
       navegarPara('/dungeon_3');
     }

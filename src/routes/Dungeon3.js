@@ -1,35 +1,88 @@
 import { useState, useContext, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassNameDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import gridDungeon3 from '../data/GridMapaDungeon3';
+import { useStartEndNodes } from '../context/StartEndNodesContext';
 
-import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
 const Dungeon3 = () => {
   const [grid] = useState(gridDungeon3);
-  const [startNode, setStartNode] = useState({ x: 14, y: 25 });
-  const [endNode, setEndNode] = useState({ x: 15, y: 19 });
+  const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
-  const rotaAtual = useLocation().pathname;
-  const [mapaPercorrido, setMapaPercorrido] = useState(false);
+  const navegarPara = useNavigate();
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
-  const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
+  const [celulaAtualIndexIda, setCelulaAtualIndexIda] = useState(0);
+  const [celulaAtualIndexVolta, setCelulaAtualIndexVolta] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
-  const [voltarEntradaClicado, setVoltarEntradaClicado] = useState(false);
+  const [sairDungeonClicado, setSairDungeonClicado] = useState(false);
 
-  const [caminhoEncontrado, setCaminhoEncontrado] = useState([]);
+  const [caminhoIda, setCaminhoIda] = useState([]);
+  const [caminhoVolta, setCaminhoVolta] = useState([]);
+
+  const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
+    return grid.map(row => row.map(() => false));
+  });
 
   useEffect(() => {
-    if ((percorrerMapaClicado || voltarEntradaClicado) && caminhoEncontrado) {
+    if (percorrerMapaClicado && caminhoIda) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoEncontrado.length) {
-          const currentNode = caminhoEncontrado[celulaAtualIndex];
-          setCelulaAtualIndex(prevIndex => prevIndex + 1);
+        if (celulaAtualIndexIda < caminhoIda.length) {
+          const currentNode = caminhoIda[celulaAtualIndexIda];
+          setCelulaAtualIndexIda(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
+
+          if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
+            clearInterval(interval);
+          }
+        } else if (sairDungeonClicado && caminhoVolta) {
+          if (celulaAtualIndexVolta < caminhoVolta.length) {
+            const currentNode = caminhoVolta[celulaAtualIndexVolta];
+            setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
+            setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
+
+            if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
+              clearInterval(interval);
+            }
+          }
+        }
+      }, 200);
+
+      return () => clearInterval(interval);
+    }
+  }, [caminhoIda, caminhoVolta, celulaAtualIndexIda, celulaAtualIndexVolta, endNode, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
+
+  useEffect(() => {
+    if ((percorrerMapaClicado && caminhoIda) || (sairDungeonClicado && caminhoVolta)) {
+      const interval = setInterval(() => {
+        if (celulaAtualIndexIda < caminhoIda.length) {
+          const currentNode = caminhoIda[celulaAtualIndexIda];
+
+          // Marca a célula atual como percorrida na matriz de células percorridas
+          setCelulasPercorridas(prevCelulasPercorridas => {
+            const newCelulasPercorridas = [...prevCelulasPercorridas];
+            newCelulasPercorridas[currentNode.x][currentNode.y] = true;
+            return newCelulasPercorridas;
+          });
+
+          if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
+            clearInterval(interval);
+          }
+          
+        } else if (celulaAtualIndexVolta < caminhoVolta.length - 1) {
+          const currentNode = caminhoVolta[celulaAtualIndexVolta];
+          setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
+          setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
+
+          setCelulasPercorridas(prevCelulasPercorridas => {
+            const newCelulasPercorridas = [...prevCelulasPercorridas];
+            newCelulasPercorridas[currentNode.x][currentNode.y] = true;
+            return newCelulasPercorridas;
+          });
+
           if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
             clearInterval(interval);
           }
@@ -38,67 +91,65 @@ const Dungeon3 = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoEncontrado, celulaAtualIndex, endNode, percorrerMapaClicado, setCustoTotal, voltarEntradaClicado]);
-
-  const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
-    // Inicializa uma matriz booleana para rastrear cada célula como não visitada
-    return grid.map(row => row.map(() => false));
-  });
-
-  useEffect(() => {
-    if ((percorrerMapaClicado || voltarEntradaClicado) && caminhoEncontrado) {
-      const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoEncontrado.length) {
-          const currentNode = caminhoEncontrado[celulaAtualIndex];
-          // Marca a célula atual como percorrida na matriz de células percorridas
-          setCelulasPercorridas(prevCelulasPercorridas => {
-            const newCelulasPercorridas = [...prevCelulasPercorridas];
-            newCelulasPercorridas[currentNode.x][currentNode.y] = true;
-            return newCelulasPercorridas;
-          });
-        }
-      }, 200);
-
-      return () => clearInterval(interval);
-    }
-  }, [caminhoEncontrado, celulaAtualIndex, percorrerMapaClicado, voltarEntradaClicado]);
+  }, [caminhoIda, caminhoVolta, celulaAtualIndexIda, celulaAtualIndexVolta, endNode.x, endNode.y, percorrerMapaClicado, sairDungeonClicado, setCustoTotal]);
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
-    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));  
-    setMapaPercorrido(true);
+    const novoStartNode = startNode;
+    const novoEndNode = endNode;
+    setCaminhoIda(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
   };
 
-  const VoltarEntrada = () => {
-    setVoltarEntradaClicado(true);
-    const novoStartNode = {...endNode};
-    const novoEndNode = {...startNode};
-    setStartNode(endNode);
-    setEndNode(startNode);
-    setCaminhoEncontrado(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));
+  const VoltarParaEntrada = () => {
+    if (caminhoIda.length > 0) {
+      setCelulasPercorridas(Array.from({ length: grid.length }, () => Array(grid[0].length).fill(false)));
+      setPercorrerMapaClicado(false);
+      setSairDungeonClicado(true);
+      const novoStartNode = endNode;
+      const novoEndNode = startNode;
+  
+      setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));
+      
+      setStartNode({ x: 5, y: 32 });
+      setEndNode({ x: 6, y: 5 });
+    }
   };
 
+  const SairDungeon = () => {
+    navegarPara('/');
+  }
+  
   return (
     <>
-      <MenuLateral 
-        PercorrerMapa={PercorrerMapa}
-        mapaPercorrido={mapaPercorrido} 
-        rotaAtual={rotaAtual}
-        VoltarEntrada={VoltarEntrada}
-      />
+      <div className="menu-lateral">
+        <div className="titulo-h2">
+          <h2>Menu Ações</h2>
+        </div>
+
+        <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+
+        <button onClick={VoltarParaEntrada} className="btn-menu-lateral">Voltar para Entrada</button>
+
+        <button onClick={SairDungeon} className="btn-menu-lateral">Sair da Dungeon</button>
+      </div>
       <div className="mapa-container">
         <div className="mapa-dungeon-container">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="mapa-linha">
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
-                const isCelulaAtual = celulaAtualIndex < caminhoEncontrado.length && caminhoEncontrado[celulaAtualIndex]?.x === rowIndex && caminhoEncontrado[celulaAtualIndex]?.y === cellIndex;
+
                 const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
+
+                const isCelulaAtualCaminhoIda = celulaAtualIndexIda < caminhoIda.length && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
+                
+                const isCelulaAtualCaminhoVolta = (celulaAtualIndexVolta < (caminhoVolta.length - 1)) && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
                 
                 return (
                   <div 
                     key={cellIndex} 
-                    className={`mapa-celula ${className} ${isCelulaAtual ? 'mapa-celula-posicao-atual' : ''} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido' : ''}`} >
+                    className={`mapa-celula ${className} ${isCelulaPercorrida ? 'mapa-celula-caminho-percorrido' : ''} ${isCelulaAtualCaminhoIda ? 'mapa-celula-posicao-atual' : ''} ${isCelulaAtualCaminhoVolta ? 'mapa-celula-posicao-atual' : ''}`} >
+                    
                     
                     {/* <span className="mapa-coordenada-x">{`x: ${rowIndex}`}</span>  
                     <span className="mapa-coordenada-y">{`y: ${cellIndex}`}</span>   */}
