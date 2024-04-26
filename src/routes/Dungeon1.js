@@ -108,13 +108,14 @@ const Dungeon1 = () => {
       const novoStartNode = endNode;
       const novoEndNode = startNode;
   
-      setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
+      setCaminhoVolta(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));
+      
+      setStartNode({ x: 39, y: 17 });
+      setEndNode({ x: 6, y: 5 });
     }
   };
 
   const SairDungeon = () => {
-    setStartNode({ x: 39, y: 17 });
-    setEndNode({ x: 6, y: 5 });
     navegarPara('/');
   }
   

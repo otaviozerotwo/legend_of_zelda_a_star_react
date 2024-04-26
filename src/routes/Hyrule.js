@@ -19,7 +19,7 @@ const Hyrule = () => {
   const graph = new Graph(grid);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
-  const rotaAtual = useLocation().pathname;
+  // const rotaAtual = useLocation().pathname;
   const [mapaPercorrido, setMapaPercorrido] = useState(false);
   const { caminhoEncontrado, setCaminhoEncontrado } = useContext(CaminhoEncontradoContext);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
@@ -68,11 +68,12 @@ const Hyrule = () => {
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
+
+    console.log('entradaMaisProxima: ', entradaMaisProxima);
     
     setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
 
     setMapaPercorrido(true);
-    setEndNode(entradaMaisProxima);
   };
 
   const EntrarDungeon = () => {
