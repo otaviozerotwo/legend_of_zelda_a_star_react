@@ -1,6 +1,5 @@
 import { useState, useContext, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { CaminhoEncontradoContext } from '../context/CaminhoEncontradoContext';
+import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
 import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
@@ -10,7 +9,7 @@ import entradasDungeons from '../utils/EntradasDungeons';
 import gridHyrule from '../data/GridHyrule';
 import { useStartEndNodes } from '../context/StartEndNodesContext';
 
-import MenuLateral from '../components/MenuAcoes';
+// import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
 const Hyrule = () => {
@@ -19,18 +18,17 @@ const Hyrule = () => {
   const graph = new Graph(grid);
   const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
-  // const rotaAtual = useLocation().pathname;
-  const [mapaPercorrido, setMapaPercorrido] = useState(false);
-  const { caminhoEncontrado, setCaminhoEncontrado } = useContext(CaminhoEncontradoContext);
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
 
+  const [caminho, setCaminho] = useState([]);
+
   useEffect(() => {
-    if (percorrerMapaClicado && caminhoEncontrado) {
+    if (percorrerMapaClicado && caminho) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoEncontrado.length) {
-          const currentNode = caminhoEncontrado[celulaAtualIndex];
+        if (celulaAtualIndex < caminho.length) {
+          const currentNode = caminho[celulaAtualIndex];
           setCelulaAtualIndex(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
           if (currentNode.x === endNode.x && currentNode.y === endNode.y) {
@@ -41,7 +39,7 @@ const Hyrule = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoEncontrado, celulaAtualIndex, endNode.x, endNode.y, percorrerMapaClicado, setCustoTotal]);
+  }, [caminho, celulaAtualIndex, endNode.x, endNode.y, percorrerMapaClicado, setCustoTotal]);
 
   const [celulasPercorridas, setCelulasPercorridas] = useState(() => {
     // Inicializa uma matriz booleana para rastrear cada célula como não visitada
@@ -49,10 +47,10 @@ const Hyrule = () => {
   });
 
   useEffect(() => {
-    if (percorrerMapaClicado && caminhoEncontrado) {
+    if (percorrerMapaClicado && caminho) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminhoEncontrado.length) {
-          const currentNode = caminhoEncontrado[celulaAtualIndex];
+        if (celulaAtualIndex < caminho.length) {
+          const currentNode = caminho[celulaAtualIndex];
           // Marca a célula atual como percorrida na matriz de células percorridas
           setCelulasPercorridas(prevCelulasPercorridas => {
             const newCelulasPercorridas = [...prevCelulasPercorridas];
@@ -64,20 +62,17 @@ const Hyrule = () => {
 
       return () => clearInterval(interval);
     }
-  }, [caminhoEncontrado, celulaAtualIndex, percorrerMapaClicado]);
+  }, [caminho, celulaAtualIndex, percorrerMapaClicado]);
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
 
     console.log('entradaMaisProxima: ', entradaMaisProxima);
     
-    setCaminhoEncontrado(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
-
-    setMapaPercorrido(true);
+    setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
   };
 
   const EntrarDungeon = () => {
-    setMapaPercorrido(false);
     setPercorrerMapaClicado(false);
     
     if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
@@ -123,7 +118,7 @@ const Hyrule = () => {
             <div key={rowIndex} className="mapa-linha">
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
-                const isCelulaAtual = celulaAtualIndex < caminhoEncontrado.length && caminhoEncontrado[celulaAtualIndex]?.x === rowIndex && caminhoEncontrado[celulaAtualIndex]?.y === cellIndex;
+                const isCelulaAtual = celulaAtualIndex < caminho.length && caminho[celulaAtualIndex]?.x === rowIndex && caminho[celulaAtualIndex]?.y === cellIndex;
                 const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
                 
                 return (
