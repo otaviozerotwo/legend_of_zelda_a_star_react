@@ -2,23 +2,18 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
-// import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import entradasDungeons from '../utils/EntradasDungeons';
 import gridHyrule from '../data/GridHyrule';
 import { useStartEndNodes } from '../context/StartEndNodesContext';
-
-// import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
-
 import calcularDistancia from '../utils/CalcularDistancia';
 
 const Hyrule = () => {
   const [grid] = useState(gridHyrule);
   const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
-  // const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
@@ -100,7 +95,18 @@ const Hyrule = () => {
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
     console.log('entradaMaisProxima: ', entradaMaisProxima);
-    if (entradaMaisProxima) {
+    console.log('lista entradas: ', entradasDungeons);
+    
+    // Verifica se todas as entradas já foram visitadas
+    const todasVisitadas = entradasDungeons.every(entrada => entrada.visitado);
+
+    console.log('todasVistadas: ', todasVisitadas);
+    
+    // Se todas as entradas foram visitadas, define o caminho para ir até o nó final
+    if (todasVisitadas) {
+      setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
+    } else {
+      // Caso contrário, define o caminho para a entrada mais próxima não visitada
       setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
     }
   };
@@ -134,12 +140,6 @@ const Hyrule = () => {
   
   return (
     <>
-      {/* <MenuLateral 
-        PercorrerMapa={PercorrerMapa}
-        mapaPercorrido={mapaPercorrido}
-        EntrarDungeon={EntrarDungeon} 
-        rotaAtual={rotaAtual}
-      /> */}
       <div className="menu-lateral">
         <div className="titulo-h2">
           <h2>Menu Ações</h2>
