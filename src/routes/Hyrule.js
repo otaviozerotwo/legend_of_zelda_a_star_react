@@ -26,7 +26,7 @@ const Hyrule = () => {
   useEffect(() => {
     // Monitora as mudanças nas entradas de dungeons
     setEntradasDungeonsAtualizadas(prevAtualizacao => prevAtualizacao + 1);
-  }, [entradasDungeons]);
+  }, []);
 
   useEffect(() => {
     // Encontra a entrada mais próxima sempre que houver uma mudança nas entradas de dungeons
