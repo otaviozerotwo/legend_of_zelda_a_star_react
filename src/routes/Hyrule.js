@@ -31,6 +31,7 @@ const Hyrule = () => {
   useEffect(() => {
     // Encontra a entrada mais próxima sempre que houver uma mudança nas entradas de dungeons
     setEntradaMaisProxima(encontrarEntradaDungeon());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entradasDungeonsAtualizadas]);
 
   useEffect(() => {
