@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
 import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
-import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
+// import encontrarEntradaDungeon from '../utils/EncontrarEntradaDungeon';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import entradasDungeons from '../utils/EntradasDungeons';
@@ -12,17 +12,31 @@ import { useStartEndNodes } from '../context/StartEndNodesContext';
 // import MenuLateral from '../components/MenuAcoes';
 import Resultados from '../components/Resultados';
 
+import calcularDistancia from '../utils/CalcularDistancia';
+
 const Hyrule = () => {
   const [grid] = useState(gridHyrule);
   const { startNode, setStartNode, endNode, setEndNode } = useStartEndNodes();
   const graph = new Graph(grid);
-  const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
+  // const entradaMaisProxima = encontrarEntradaDungeon(startNode, entradasDungeons);
   const navegarPara = useNavigate();
   const { custoTotal, setCustoTotal } = useContext(CustoCaminhoContext);
   const [celulaAtualIndex, setCelulaAtualIndex] = useState(0);
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
+  const [entradaMaisProxima, setEntradaMaisProxima] = useState(null); // Estado para armazenar a entrada mais próxima
+  const [entradasDungeonsAtualizadas, setEntradasDungeonsAtualizadas] = useState(0); // Estado para sinalizar mudanças nas entradas de dungeons
 
   const [caminho, setCaminho] = useState([]);
+
+  useEffect(() => {
+    // Monitora as mudanças nas entradas de dungeons
+    setEntradasDungeonsAtualizadas(prevAtualizacao => prevAtualizacao + 1);
+  }, [entradasDungeons]);
+
+  useEffect(() => {
+    // Encontra a entrada mais próxima sempre que houver uma mudança nas entradas de dungeons
+    setEntradaMaisProxima(encontrarEntradaDungeon());
+  }, [entradasDungeonsAtualizadas]);
 
   useEffect(() => {
     if (percorrerMapaClicado && caminho) {
@@ -64,44 +78,55 @@ const Hyrule = () => {
     }
   }, [caminho, celulaAtualIndex, percorrerMapaClicado]);
 
+  // Função encontrarEntradaDungeon
+  const encontrarEntradaDungeon = () => {
+    let entradaMaisProxima = null;
+    let distanciaMinima = Infinity;
+
+    // Itera sobre cada entrada de dungeon na lista
+    entradasDungeons.forEach(entrada => {
+      if (!entrada.visitado) {
+        const distancia = calcularDistancia(startNode.x, startNode.y, entrada.x, entrada.y);
+        if (distancia < distanciaMinima) {
+          distanciaMinima = distancia;
+          entradaMaisProxima = entrada;
+        }
+      }
+    });
+    
+    return entradaMaisProxima;
+  };
+
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
-
     console.log('entradaMaisProxima: ', entradaMaisProxima);
-    console.log('entradasDungeon: ', entradasDungeons);
-
-    setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
+    if (entradaMaisProxima) {
+      setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
+    }
   };
 
   const EntrarDungeon = () => {
     setPercorrerMapaClicado(false);
-  
-    // Itera sobre cada entrada de dungeon na lista
-    for (let i = 0; i < entradasDungeons.length; i++) {
-      const entradaAtual = entradasDungeons[i];
-  
-      if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17 && entradaAtual.x === 39 && entradaAtual.y === 17) {
+    if (entradaMaisProxima) {
+      const entradaAtual = entradasDungeons.find(entrada => entrada.x === entradaMaisProxima.x && entrada.y === entradaMaisProxima.y);
+      if (entradaAtual) {
+        // Marca a entrada atual como visitada
+        entradaAtual.visitado = true;
+      }
+    }
+    // Navegue para a página da dungeon
+    if (entradaMaisProxima) {
+      if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
         setStartNode({ x: 14, y: 26 });
         setEndNode({ x: 13, y: 3 });
-  
-        entradaAtual.visitado = true;
-  
         navegarPara('/dungeon_1');
-  
-      } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1 && entradaAtual.x === 24 && entradaAtual.y === 1) {
+      } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
         setStartNode({ x: 13, y: 25 });
         setEndNode({ x: 13, y: 2 });
-  
-        entradaAtual.visitado = true;
-  
         navegarPara('/dungeon_2');
-  
-      } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32 && entradaAtual.x === 5 && entradaAtual.y === 32) {
+      } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
         setStartNode({ x: 14, y: 25 });
         setEndNode({ x: 15, y: 19 });
-  
-        entradaAtual.visitado = true;
-  
         navegarPara('/dungeon_3');
       }
     }
