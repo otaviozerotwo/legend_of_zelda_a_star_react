@@ -68,37 +68,40 @@ const Hyrule = () => {
     setPercorrerMapaClicado(true);
 
     console.log('entradaMaisProxima: ', entradaMaisProxima);
+    console.log('entradasDungeon: ', entradasDungeons);
 
     setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
   };
 
   const EntrarDungeon = () => {
     setPercorrerMapaClicado(false);
-
+  
     // Itera sobre cada entrada de dungeon na lista
     for (let i = 0; i < entradasDungeons.length; i++) {
-      if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17) {
-        setStartNode({ x: 14, y: 26});
-        setEndNode({ x: 13, y: 3});
-        
-        entradasDungeons[i].visitado = true;
-        
+      const entradaAtual = entradasDungeons[i];
+  
+      if (entradaMaisProxima.x === 39 && entradaMaisProxima.y === 17 && entradaAtual.x === 39 && entradaAtual.y === 17) {
+        setStartNode({ x: 14, y: 26 });
+        setEndNode({ x: 13, y: 3 });
+  
+        entradaAtual.visitado = true;
+  
         navegarPara('/dungeon_1');
   
-      } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1) {
+      } else if (entradaMaisProxima.x === 24 && entradaMaisProxima.y === 1 && entradaAtual.x === 24 && entradaAtual.y === 1) {
         setStartNode({ x: 13, y: 25 });
         setEndNode({ x: 13, y: 2 });
-
-        entradasDungeons[i].visitado = true;
-        
+  
+        entradaAtual.visitado = true;
+  
         navegarPara('/dungeon_2');
   
-      } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32) {
+      } else if (entradaMaisProxima.x === 5 && entradaMaisProxima.y === 32 && entradaAtual.x === 5 && entradaAtual.y === 32) {
         setStartNode({ x: 14, y: 25 });
         setEndNode({ x: 15, y: 19 });
-
-        entradasDungeons[i].visitado = true;
-        
+  
+        entradaAtual.visitado = true;
+  
         navegarPara('/dungeon_3');
       }
     }

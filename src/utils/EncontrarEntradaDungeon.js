@@ -6,11 +6,14 @@ function encontrarEntradaDungeon(startNode, entradasDungeons) {
     console.log(entradasDungeons);
     // Verifica se a entrada já foi visitada
     if (entradasDungeons.visitado) {
+
+      console.log('entrei no if entradasDungeons.visitado');
+
       continue; // Passa para a próxima entrada de dungeon
     }
 
     // Simula o processamento da entrada de dungeon
-    console.log(`Processando entrada de dungeon em (${entradasDungeons.x}, ${entradasDungeons.y})`);
+    // console.log(`Processando entrada de dungeon em (${entradasDungeons.x}, ${entradasDungeons.y})`);
 
     let distanciaMinima = Infinity;
     let entradaMaisProxima = null;
