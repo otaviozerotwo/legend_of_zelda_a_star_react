@@ -120,7 +120,7 @@
 }
 
 .cell-hyrule-value-0 {
-  background-color: #FFFFFF;
+  background-image: url('/public/img-entrada-dungeon.png');
 }
 
 .cell-hyrule-value-3 {
@@ -148,6 +148,10 @@
 }
 
 .cell-dungeon-value-0 {
+  background-image: url('/public/img-entrada-dungeon.png');
+}
+
+.cell-dungeon-value-1 {
   background-color: blue;
 }
 
