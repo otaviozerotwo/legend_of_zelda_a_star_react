@@ -3,7 +3,7 @@ const atribuirClassNameParaCelula = (cell) => {
     case 0:
       return "cell-dungeon-value-0";
     case 1:
-      return "cell-dungeon-value-1";
+      return "cell-dungeon-value-pingente-3";
     case 10:
       return "cell-dungeon-value-10";
     case 99:

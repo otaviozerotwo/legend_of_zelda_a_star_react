@@ -149,6 +149,7 @@
 
 .cell-dungeon-value-0 {
   background-image: url('/public/img-entrada-dungeon.png');
+  background-size: cover;
 }
 
 .cell-dungeon-value-1 {
@@ -165,6 +166,21 @@
 
 .cell-dungeon-value-100 {
   background-color: black;
+}
+
+.cell-dungeon-value-pingente-1 {
+  background-image: url('/public/img-pingente-azul.png');
+  background-size: cover;
+}
+
+.cell-dungeon-value-pingente-2 {
+  background-image: url('/public/img-pingente-verde.png');
+  background-size: cover;
+
+}
+.cell-dungeon-value-pingente-3 {
+  background-image: url('/public/img-pingente-vermelho.png');
+  background-size: cover;
 }
 
 .mapa-celula-posicao-atual-caminho-ida {
