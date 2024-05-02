@@ -37,7 +37,7 @@ const Hyrule = () => {
   useEffect(() => {
     if (percorrerMapaClicado && caminho) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminho.length) {
+        if (celulaAtualIndex < (caminho.length -1)) {
           const currentNode = caminho[celulaAtualIndex];
           setCelulaAtualIndex(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
@@ -59,7 +59,7 @@ const Hyrule = () => {
   useEffect(() => {
     if (percorrerMapaClicado && caminho) {
       const interval = setInterval(() => {
-        if (celulaAtualIndex < caminho.length) {
+        if (celulaAtualIndex < (caminho.length -1)) {
           const currentNode = caminho[celulaAtualIndex];
           // Marca a célula atual como percorrida na matriz de células percorridas
           setCelulasPercorridas(prevCelulasPercorridas => {
@@ -156,7 +156,7 @@ const Hyrule = () => {
             <div key={rowIndex} className="mapa-linha">
               {row.map((cell, cellIndex) => {
                 const className = atribuirClassNameParaCelula(cell);
-                const isCelulaAtual = celulaAtualIndex < caminho.length && caminho[celulaAtualIndex]?.x === rowIndex && caminho[celulaAtualIndex]?.y === cellIndex;
+                const isCelulaAtual = celulaAtualIndex < (caminho.length -1) && caminho[celulaAtualIndex]?.x === rowIndex && caminho[celulaAtualIndex]?.y === cellIndex;
                 const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
                 
                 return (

@@ -30,7 +30,7 @@ const Dungeon1 = () => {
   useEffect(() => {
     if (percorrerMapaClicado && caminhoIda) {
       const interval = setInterval(() => {
-        if (celulaAtualIndexIda < caminhoIda.length) {
+        if (celulaAtualIndexIda < (caminhoIda.length -1)) {
           const currentNode = caminhoIda[celulaAtualIndexIda];
           setCelulaAtualIndexIda(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
@@ -39,7 +39,7 @@ const Dungeon1 = () => {
             clearInterval(interval);
           }
         } else if (sairDungeonClicado && caminhoVolta) {
-          if (celulaAtualIndexVolta < caminhoVolta.length) {
+          if (celulaAtualIndexVolta < (caminhoVolta.length -1)) {
             const currentNode = caminhoVolta[celulaAtualIndexVolta];
             setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
             setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
@@ -58,7 +58,7 @@ const Dungeon1 = () => {
   useEffect(() => {
     if ((percorrerMapaClicado && caminhoIda) || (sairDungeonClicado && caminhoVolta)) {
       const interval = setInterval(() => {
-        if (celulaAtualIndexIda < caminhoIda.length) {
+        if (celulaAtualIndexIda < (caminhoIda.length -1)) {
           const currentNode = caminhoIda[celulaAtualIndexIda];
 
           // Marca a célula atual como percorrida na matriz de células percorridas
@@ -72,7 +72,7 @@ const Dungeon1 = () => {
             clearInterval(interval);
           }
           
-        } else if (celulaAtualIndexVolta < caminhoVolta.length - 1) {
+        } else if (celulaAtualIndexVolta < (caminhoVolta.length -1)) {
           const currentNode = caminhoVolta[celulaAtualIndexVolta];
           setCelulaAtualIndexVolta(prevIndex => prevIndex + 1);
           setCustoTotal(prevCustoTotal => prevCustoTotal + currentNode.weight);
@@ -141,7 +141,7 @@ const Dungeon1 = () => {
 
                 const isCelulaPercorrida = celulasPercorridas[rowIndex][cellIndex];
 
-                const isCelulaAtualCaminhoIda = celulaAtualIndexIda < caminhoIda.length && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
+                const isCelulaAtualCaminhoIda = celulaAtualIndexIda < (caminhoIda.length -1) && caminhoIda[celulaAtualIndexIda]?.x === rowIndex && caminhoIda[celulaAtualIndexIda]?.y === cellIndex;
                 
                 const isCelulaAtualCaminhoVolta = (celulaAtualIndexVolta < (caminhoVolta.length - 1)) && caminhoVolta[celulaAtualIndexVolta]?.x === rowIndex && caminhoVolta[celulaAtualIndexVolta]?.y === cellIndex;
                 
