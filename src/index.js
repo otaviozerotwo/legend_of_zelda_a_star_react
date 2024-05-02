@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import { CaminhoEncontradoProvider } from './context/CaminhoEncontradoContext';
+import { StartEndNodesProvider } from './context/StartEndNodesContext';
 
 import Hyrule from './routes/Hyrule';
 import Dungeon1 from './routes/Dungeon1';
@@ -29,9 +29,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <CaminhoEncontradoProvider>
+    <StartEndNodesProvider>
       <RouterProvider router={router} />
-    </CaminhoEncontradoProvider>
+    </StartEndNodesProvider>
   </React.StrictMode>
 );
 
