@@ -3,7 +3,7 @@ const atribuirClassNameParaCelula = (cell) => {
     case 0:
       return "cell-hyrule-value-0";
     case 1:
-      return "cell-hyrule-link";
+      return "cell-hyrule-link-house";
     case 2:
       return "cell-hyrule-entrada-lost-woods";
     case 3:

@@ -120,19 +120,14 @@
   background-size: cover;
 }
 
-.cell-hyrule-link {
-  background-image: url('/public/img-link.png');
-  background-size: 15px 15px;
-  background-repeat: no-repeat;
+.cell-hyrule-link-house {
+  background-image: url('/public/img-links-house.png');
+  background-size: cover;
 }
 
 .cell-hyrule-master-sword {
   background-image: url('/public/img-master-sword.png');
   background-size: cover;
-}
-
-.cell-hyrule-value-1 {
-  background-color: #FFA500;
 }
 
 .cell-hyrule-value-0 {
@@ -201,17 +196,19 @@
 }
 
 .mapa-celula-posicao-atual-caminho-ida {
-  background-color: purple;
-  border-radius: 50%;
-
+  background-image: url('/public/img-link.png');
+  background-size: 15px 15px;
+  background-repeat: no-repeat;
 }
+
 .mapa-celula-posicao-atual {
-  background-color: yellow;
-  border-radius: 50%;
+  background-image: url('/public/img-link.png');
+  background-size: 15px 15px;
+  background-repeat: no-repeat;
 }
 
 .mapa-celula-caminho-percorrido-ida {
-  background-color: purple;
+  background-color: #D0F0F8;
 }
 
 .mapa-celula-caminho-percorrido {
