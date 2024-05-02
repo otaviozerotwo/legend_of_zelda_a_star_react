@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustoCaminhoContext } from '../context/CustoCaminhoContext';
-import atribuirClassNameParaCelula from '../utils/AtribuirClassName';
+import atribuirClassNameParaCelula from '../utils/AtribuirClassNameHyrule';
 import astar from '../utils/aStar';
 import Graph from '../utils/Graph';
 import entradasDungeons from '../utils/EntradasDungeons';

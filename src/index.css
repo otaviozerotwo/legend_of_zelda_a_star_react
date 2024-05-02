@@ -115,12 +115,29 @@
   background-color: #6765A6;
 }
 
+.cell-hyrule-entrada-lost-woods {
+  background-image: url('/public/img-entrada-lost-woods.png');
+  background-size: cover;
+}
+
+.cell-hyrule-link {
+  background-image: url('/public/img-link.png');
+  background-size: 15px 15px;
+  background-repeat: no-repeat;
+}
+
+.cell-hyrule-master-sword {
+  background-image: url('/public/img-master-sword.png');
+  background-size: cover;
+}
+
 .cell-hyrule-value-1 {
   background-color: #FFA500;
 }
 
 .cell-hyrule-value-0 {
   background-image: url('/public/img-entrada-dungeon.png');
+  background-size: cover;
 }
 
 .cell-hyrule-value-3 {
