@@ -1,0 +1,24 @@
+.menu-acoes {
+  width: 250px; 
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.btn-menu-acoes {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  font-family: 'REGGAE ONE';
+  font-size: 16px;
+  background-color: #7B79C6;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-menu-acoes:hover {
+  background-color: #6765A6;
+}

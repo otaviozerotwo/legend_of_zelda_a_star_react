@@ -141,14 +141,14 @@ const Hyrule = () => {
   
   return (
     <>
-      <div className="menu-lateral">
+      <div className="menu-acoes">
         <div className="titulo-h2">
           <h2>Menu Ações</h2>
         </div>
 
-        <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+        <button onClick={PercorrerMapa} className="btn-menu-acoes">Percorrer Mapa</button>
 
-        <button onClick={EntrarDungeon} className="btn-menu-lateral">Entrar na Dungeon</button>
+        <button onClick={EntrarDungeon} className="btn-menu-acoes">Entrar na Dungeon</button>
       </div>
       <div className="mapa-container">
         <div className="mapa-hyrule-container">

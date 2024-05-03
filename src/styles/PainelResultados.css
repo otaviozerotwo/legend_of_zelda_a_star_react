@@ -1,0 +1,16 @@
+.painel-resultados {
+  width: 250px; 
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.painel-resultados-custo-total {
+  display: block;
+  width: 100%;
+  font-family: 'REGGAE ONE';
+  font-size: 20px;
+  background-color: #7B79C6;
+  color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
+}

@@ -121,16 +121,16 @@ const Dungeon2 = () => {
   
   return (
     <>
-      <div className="menu-lateral">
+      <div className="menu-acoes">
         <div className="titulo-h2">
           <h2>Menu Ações</h2>
         </div>
 
-        <button onClick={PercorrerMapa} className="btn-menu-lateral">Percorrer Mapa</button>
+        <button onClick={PercorrerMapa} className="btn-menu-acoes">Percorrer Mapa</button>
 
-        <button onClick={VoltarParaEntrada} className="btn-menu-lateral">Voltar para Entrada</button>
+        <button onClick={VoltarParaEntrada} className="btn-menu-acoes">Voltar para Entrada</button>
 
-        <button onClick={SairDungeon} className="btn-menu-lateral">Sair da Dungeon</button>
+        <button onClick={SairDungeon} className="btn-menu-acoes">Sair da Dungeon</button>
       </div>
       <div className="mapa-container">
         <div className="mapa-dungeon-container">
