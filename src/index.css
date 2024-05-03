@@ -1,6 +1,5 @@
 :root {
-  display: flex;
-  justify-content: flex-start;
+  /* display: flex; */
   background-color: #D1C368;
 }
 
@@ -18,6 +17,8 @@
 .mapa-container {
   flex-grow: 1; /* Permite que o mapa ocupe todo o espaço restante */
   padding: 20px; /* Define o espaçamento interno do mapa */
+  display: flex;
+  justify-content: center;
 }
 
 .mapa-hyrule-container {
@@ -96,10 +97,6 @@
 .cell-hyrule-value-0 {
   background-image: url('/public/img-entrada-dungeon.png');
   background-size: cover;
-}
-
-.cell-hyrule-value-3 {
-  background-color: #FFFF00;
 }
 
 .cell-hyrule-value-10 {
