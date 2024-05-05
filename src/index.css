@@ -9,16 +9,16 @@
   height: 100vh; /* Define a altura total do container */
 }
 
-.titulo-h2 {
+.titulo {
   font-family: 'HYLIA SERIF';
   color: #c1232d;
 }
 
 .mapa-container {
   flex-grow: 1; /* Permite que o mapa ocupe todo o espaço restante */
-  padding: 20px; /* Define o espaçamento interno do mapa */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
 .mapa-hyrule-container {

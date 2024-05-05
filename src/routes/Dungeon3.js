@@ -122,7 +122,7 @@ const Dungeon3 = () => {
   return (
     <>
       <div className="menu-acoes">
-        <div className="titulo-h2">
+        <div className="titulo">
           <h2>Menu Ações</h2>
         </div>
 
@@ -133,6 +133,9 @@ const Dungeon3 = () => {
         <button onClick={SairDungeon} className="btn-menu-acoes">Sair da Dungeon</button>
       </div>
       <div className="mapa-container">
+        <div className="titulo">
+          <h1>Dungeon #3</h1>
+        </div>
         <div className="mapa-dungeon-container">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="mapa-linha">

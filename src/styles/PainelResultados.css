@@ -1,16 +1,51 @@
-.painel-resultados {
-  width: 250px; 
+.painel-resultados-container {
+  margin-right: 50px;
+  height: 100vh;
   padding: 5px 20px;
   text-align: center;
 }
 
-.painel-resultados-custo-total {
+.painel-resultados-moldura {
   display: block;
-  width: 100%;
+  width: 300px;
+  height: 500px;
   font-family: 'REGGAE ONE';
   font-size: 20px;
-  background-color: #7B79C6;
+  background-color: #800080;
   color: #fff;
   border: 1px solid black;
   border-radius: 5px;
+}
+
+.painel-resultados-itens-obtidos {
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(3, 50px);
+  grid-template-rows: repeat(2, 50px);
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.painel-resultados-itens-obtidos-item-39-17 {
+  background-image: url('/public/pendant-blue.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.painel-resultados-itens-obtidos-item-24-1 {
+  background-image: url('/public/pendant-green.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.painel-resultados-itens-obtidos-item-5-32 {
+  background-image: url('/public/pendant-red.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.painel-resultados-itens-obtidos-item-6-5 {
+  background-image: url('/public/master-sword.png');
+  background-size: cover;
+  background-repeat: no-repeat;
 }

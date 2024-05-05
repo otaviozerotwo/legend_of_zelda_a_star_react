@@ -142,7 +142,7 @@ const Hyrule = () => {
   return (
     <>
       <div className="menu-acoes">
-        <div className="titulo-h2">
+        <div className="titulo">
           <h2>Menu Ações</h2>
         </div>
 
@@ -174,7 +174,10 @@ const Hyrule = () => {
           ))}
         </div>
       </div>
-      <Resultados custoTotal={custoTotal} />
+      <Resultados 
+        custoTotal={custoTotal}
+        entradasDungeons={entradasDungeons} 
+      />
     </>
   );
 };
