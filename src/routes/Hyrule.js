@@ -151,6 +151,9 @@ const Hyrule = () => {
         <button onClick={EntrarDungeon} className="btn-menu-acoes">Entrar na Dungeon</button>
       </div>
       <div className="mapa-container">
+        <div className="titulo">
+          <h1>Hyrule Map</h1>
+        </div>
         <div className="mapa-hyrule-container">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="mapa-linha">
