@@ -3,7 +3,7 @@ import entradasDungeons from '../utils/EntradasDungeons';
 
 import '../styles/PainelResultados.css';
 
-const Resultados = ({ custoTotal }) => {
+const Resultados = ({ custoTotal, fimDeJogo }) => {
   const [itensObtidos, setItensObtidos] = useState([]);
 
   useEffect(() => {
@@ -20,6 +20,16 @@ const Resultados = ({ custoTotal }) => {
     return <div key={`${entrada.x}-${entrada.y}`} className={`painel-resultados-itens-obtidos-item-${entrada.x}-${entrada.y}`}></div>;
   };
 
+  // Adiciona o item 6-5 uma vez quando fimDeJogo se tornar verdadeiro
+  useEffect(() => {
+    if (fimDeJogo && !itensObtidos.some(item => item.key === '6-5')) {
+      setItensObtidos(prevItems => [
+        ...prevItems,
+        <div key="6-5" className="painel-resultados-itens-obtidos-item-6-5"></div>
+      ]);
+    }
+  }, [fimDeJogo, itensObtidos]);
+
   return (
     <div className="painel-resultados-container">
       <div className="titulo">
@@ -27,7 +37,8 @@ const Resultados = ({ custoTotal }) => {
       </div>
       
       <div className="painel-resultados-moldura">
-        <p>{`Custo Total: ${custoTotal}`}</p>
+        <p>Custo Total:</p>
+        <span>{custoTotal}</span>
         <p>Itens Obtidos:</p>
 
         <div className="painel-resultados-itens-obtidos">

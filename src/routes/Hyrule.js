@@ -20,6 +20,7 @@ const Hyrule = () => {
   const [percorrerMapaClicado, setPercorrerMapaClicado] = useState(false);
   const [entradaMaisProxima, setEntradaMaisProxima] = useState(null); // Estado para armazenar a entrada mais próxima
   const [entradasDungeonsAtualizadas, setEntradasDungeonsAtualizadas] = useState(0); // Estado para sinalizar mudanças nas entradas de dungeons
+  const [fimDeJogo, setFimDeJogo] = useState(false);
 
   const [caminho, setCaminho] = useState([]);
 
@@ -106,6 +107,7 @@ const Hyrule = () => {
     // Se todas as entradas foram visitadas, define o caminho para ir até o nó final
     if (todasVisitadas) {
       setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[endNode.x][endNode.y]));
+      setFimDeJogo(true);
     } else {
       // Caso contrário, define o caminho para a entrada mais próxima não visitada
       setCaminho(astar.search(graph, graph.grid[startNode.x][startNode.y], graph.grid[entradaMaisProxima.x][entradaMaisProxima.y]));
@@ -152,7 +154,7 @@ const Hyrule = () => {
       </div>
       <div className="mapa-container">
         <div className="titulo">
-          <h1>Hyrule Map</h1>
+          <h1>Hyrule</h1>
         </div>
         <div className="mapa-hyrule-container">
           {grid.map((row, rowIndex) => (
@@ -179,7 +181,7 @@ const Hyrule = () => {
       </div>
       <Resultados 
         custoTotal={custoTotal}
-        entradasDungeons={entradasDungeons} 
+        fimDeJogo={fimDeJogo} 
       />
     </>
   );
