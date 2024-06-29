@@ -95,6 +95,7 @@ const Dungeon1 = () => {
 
   const PercorrerMapa = () => {
     setPercorrerMapaClicado(true);
+
     const novoStartNode = startNode;
     const novoEndNode = endNode;
     setCaminhoIda(astar.search(graph, graph.grid[novoStartNode.x][novoStartNode.y], graph.grid[novoEndNode.x][novoEndNode.y]));  
