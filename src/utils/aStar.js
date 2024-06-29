@@ -6,26 +6,13 @@
 
 */
 
-// function pathTo(node) {
-//   var curr = node; // Inicializa uma variável 'curr' com o nó fornecido como argumento
-//   var path = []; // Cria uma matriz vazia para armazenar o caminho
-
-//   // Continua enquanto o nó atual tiver um nó pai
-//   while (curr.parent) {
-//     path.unshift(curr); // Adiciona o nó atual à frente da matriz para manter a ordem correta
-//     curr = curr.parent; // Atualiza o nó atual para ser o nó pai do nó atual
-//   }
-
-//   return path; // Retorna o caminho do nó final até o nó inicial
-// }
-
 function pathTo(node) {
-  var curr = node;
-  var path = [];
+  var curr = node; 
+  var path = []; // matriz para armazenar o caminho
 
   while (curr.parent) {
-    path.unshift(curr);
-    curr = curr.parent;
+    path.unshift(curr); // adiciona o nó atual na matriz
+    curr = curr.parent; // nó atual passa a ser pai 
   }
 
   return path;
@@ -49,7 +36,6 @@ const astar = {
     // Configurações opcionais para a busca A*
     options = options || {};
 
-    // Heurística a ser usada, padrão é a distância de euclidean
     // var heuristic = options.heuristic || astar.heuristics.euclidean;
     var heuristic = options.heuristic || astar.heuristics.manhattan;
 
@@ -79,7 +65,7 @@ const astar = {
       // Se o nó atual for o nó final, retorna o caminho até ele
       if (currentNode === end) {
         
-        console.log('13. Caminho pathTo: ', pathTo(currentNode));
+        console.log('13. Caminho encontrado: ', pathTo(currentNode));
         
         return pathTo(currentNode);
       }
@@ -138,8 +124,6 @@ const astar = {
     if (closest) {
       return pathTo(closestNode);
     }
-
-    console.log(pathTo(currentNode));
   
     // Caso contrário, retorna uma lista vazia indicando que o caminho não foi encontrado
     return [];
